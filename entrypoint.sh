@@ -48,11 +48,10 @@ echo "BP: Enforce Admins     : $BRANCH_PROTECTION_ENFORCE_ADMINS"
 RAW_ACTION_SECRETS=$INPUT_ACTION_SECRETS
 ACTION_SECRETS=(RAW_ACTION_SECRETS)
 echo "Action secrets count   : ${#ACTION_SECRETS[@]}"
-GITHUB_TOKEN="$INPUT_TOKEN"
 echo "---------------------------------------------"
 echo " "
 
-gh auth login --with-token < echo ${GITHUB_TOKEN}
+gh auth login --with-token
 echo "Logged in with provided token"
 
 # find username and repo name

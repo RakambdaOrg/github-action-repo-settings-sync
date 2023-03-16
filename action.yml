@@ -69,9 +69,6 @@ inputs:
     description: 'Action secrets to deploy on every repo'
     required: false
     default: ''
-  TOKEN:
-    description: 'Personal access token with Repo privileges'
-    required: true
 
 runs:
   using: 'docker'

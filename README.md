@@ -32,6 +32,8 @@ jobs:
     steps:
       - name: Repo Setup
         uses: kbrashears5/github-action-repo-settings-sync@v1.0.0
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
           REPOSITORIES: |
             kbrashears5/github-action-repo-settings-sync
@@ -52,12 +54,10 @@ jobs:
           ACTION_SECRETS: 
             KEY1=VAL1
             KEY2=VAL2
-          TOKEN: ${{ secrets.ACTIONS }}
 ```
 ## Parameters
 | Parameter | Required | Default | Description |
 | --- | --- | --- | --- |
-| TOKEN | __true__ |  |Personal Access Token with Repo scope |
 | REPOSITORIES | false | 'ALL' | Github repositories to setup. Default will get all public repositories for your username |
 | ALLOW_ISSUES | false | true | Whether or not to allow issues on the repo |
 | ALLOW_PROJECTS | false | true | Whether or not to allow projects on the repo |
