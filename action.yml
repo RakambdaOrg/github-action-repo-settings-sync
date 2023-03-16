@@ -65,6 +65,10 @@ inputs:
     description: 'Enforce branch protection rules for repo admins'
     required: false
     default: 'false'
+  ACTION_SECRETS:
+    description: 'Action secrets to deploy on every repo'
+    required: false
+    default: ''
   TOKEN:
     description: 'Personal access token with Repo privileges'
     required: true

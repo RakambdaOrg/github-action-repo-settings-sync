@@ -49,6 +49,9 @@ jobs:
           BRANCH_PROTECTION_DISMISS: 'true'
           BRANCH_PROTECTION_CODE_OWNERS: 'true'
           BRANCH_PROTECTION_ENFORCE_ADMINS: 'false'
+          ACTION_SECRETS: 
+            KEY1=VAL1
+            KEY2=VAL2
           TOKEN: ${{ secrets.ACTIONS }}
 ```
 ## Parameters
@@ -70,3 +73,4 @@ jobs:
 | BRANCH_PROTECTION_DISMISS | false | true | Dismiss stale pull request approvals when new commits are pushed |
 | BRANCH_PROTECTION_CODE_OWNERS | false | true | Require review from Code Owners |
 | BRANCH_PROTECTION_ENFORCE_ADMINS | false | false | Enforce branch protection rules for repo admins |
+| ACTION_SECRETS | false |  | Action secrets to deploy on every repo |
