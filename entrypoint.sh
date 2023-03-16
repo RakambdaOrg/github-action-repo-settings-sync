@@ -98,12 +98,13 @@ for repository in "${REPOSITORIES[@]}"; do
                 -X PUT \
                 -H "Accept: application/vnd.github.luke-cage-preview+json" \
                 -H "Content-Type: application/json" \
-                -f required_status_checks=null \
-                -f enforce_admins=$BRANCH_PROTECTION_ENFORCE_ADMINS \
-                -f required_pull_request_reviews[dismiss_stale_reviews]=$BRANCH_PROTECTION_DISMISS \
-                -f required_pull_request_reviews[require_code_owner_reviews]=$BRANCH_PROTECTION_CODE_OWNERS \
-                -f required_pull_request_reviews[required_approving_review_count]=$BRANCH_PROTECTION_REQUIRED_REVIEWERS \
-                -f restrictions=null
+                -F enforce_admins=$BRANCH_PROTECTION_ENFORCE_ADMINS \
+                -F required_status_checks=null \
+                -F required_pull_request_reviews[dismiss_stale_reviews]=$BRANCH_PROTECTION_DISMISS \
+                -F required_pull_request_reviews[require_code_owner_reviews]=$BRANCH_PROTECTION_CODE_OWNERS \
+                -F required_pull_request_reviews[required_approving_review_count]=$BRANCH_PROTECTION_REQUIRED_REVIEWERS \
+                -F restrictions=null
+            echo " "
         done
 
     elif [ "$BRANCH_PROTECTION_ENABLED" == "false" ]; then
@@ -114,6 +115,7 @@ for repository in "${REPOSITORIES[@]}"; do
                 -X DELETE \
                 -H "Accept: application/vnd.github.luke-cage-preview+json" \
                 -H "Content-Type: application/json"
+            echo " "
         done
     fi
     echo " "

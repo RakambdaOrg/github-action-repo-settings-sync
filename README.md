@@ -37,22 +37,22 @@ jobs:
           REPOSITORIES: |
             owner/repo1
             owner/repo2
-          ALLOW_ISSUES: 'true'
-          ALLOW_PROJECTS: 'true'
-          ALLOW_WIKI: 'true'
-          SQUASH_MERGE: 'true'
-          MERGE_COMMIT: 'true'
-          REBASE_MERGE: 'true'
-          AUTO_MERGE: 'false'
-          DELETE_HEAD: 'false'
-          BRANCH_PROTECTION_ENABLED: 'true'
+          ALLOW_ISSUES: true
+          ALLOW_PROJECTS: true
+          ALLOW_WIKI: true
+          SQUASH_MERGE: true
+          MERGE_COMMIT: true
+          REBASE_MERGE: true
+          AUTO_MERGE: false
+          DELETE_HEAD: false
+          BRANCH_PROTECTION_ENABLED: true
           BRANCH_PROTECTION_NAME: |
             main
             other
-          BRANCH_PROTECTION_REQUIRED_REVIEWERS: '1'
-          BRANCH_PROTECTION_DISMISS: 'true'
-          BRANCH_PROTECTION_CODE_OWNERS: 'true'
-          BRANCH_PROTECTION_ENFORCE_ADMINS: 'false'
+          BRANCH_PROTECTION_REQUIRED_REVIEWERS: 1
+          BRANCH_PROTECTION_DISMISS: true
+          BRANCH_PROTECTION_CODE_OWNERS: true
+          BRANCH_PROTECTION_ENFORCE_ADMINS: false
           ACTION_SECRETS: 
             KEY1=VAL1
             KEY2=VAL2
