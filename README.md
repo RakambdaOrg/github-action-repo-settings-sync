@@ -47,8 +47,8 @@ jobs:
           DELETE_HEAD: 'false'
           BRANCH_PROTECTION_ENABLED: 'true'
           BRANCH_PROTECTION_NAME: |
-		    'main'
-			'other'
+            main
+            other
           BRANCH_PROTECTION_REQUIRED_REVIEWERS: '1'
           BRANCH_PROTECTION_DISMISS: 'true'
           BRANCH_PROTECTION_CODE_OWNERS: 'true'
