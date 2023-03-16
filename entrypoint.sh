@@ -35,8 +35,9 @@ DELETE_HEAD=$INPUT_DELETE_HEAD
 echo "Delete Head            : $DELETE_HEAD"
 BRANCH_PROTECTION_ENABLED=$INPUT_BRANCH_PROTECTION_ENABLED
 echo "Branch Protection (BP) : $BRANCH_PROTECTION_ENABLED"
-BRANCH_PROTECTION_NAME=$INPUT_BRANCH_PROTECTION_NAME
-echo "BP: Name               : $BRANCH_PROTECTION_NAME"
+RAW_BRANCH_PROTECTION_NAME=$INPUT_BRANCH_PROTECTION_NAME
+BRANCH_PROTECTION_NAME=($RAW_BRANCH_PROTECTION_NAME)
+echo "BP: Names              : $BRANCH_PROTECTION_NAME"
 BRANCH_PROTECTION_REQUIRED_REVIEWERS=$INPUT_BRANCH_PROTECTION_REQUIRED_REVIEWERS
 echo "BP: Required Reviewers : $BRANCH_PROTECTION_REQUIRED_REVIEWERS"
 BRANCH_PROTECTION_DISMISS=$INPUT_BRANCH_PROTECTION_DISMISS
@@ -90,24 +91,30 @@ for repository in "${REPOSITORIES[@]}"; do
     echo " "
 
     if [ "$BRANCH_PROTECTION_ENABLED" == "true" ]; then
-        echo "Activating [${BRANCH_PROTECTION_NAME}] branch protection rules"
-        gh api repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection \
-            -X PUT \
-            -H "Accept: application/vnd.github.luke-cage-preview+json" \
-            -H "Content-Type: application/json" \
-            -f required_status_checks=null \
-            -f enforce_admins=$BRANCH_PROTECTION_ENFORCE_ADMINS \
-            -f required_pull_request_reviews[dismiss_stale_reviews]=$BRANCH_PROTECTION_DISMISS \
-            -f required_pull_request_reviews[require_code_owner_reviews]=$BRANCH_PROTECTION_CODE_OWNERS \
-            -f required_pull_request_reviews[required_approving_review_count]=$BRANCH_PROTECTION_REQUIRED_REVIEWERS \
-            -f restrictions=null
+        # loop through all the branches name
+        for branch_name in "${BRANCH_PROTECTION_NAME[@]}"; do
+            echo "Activating [${branch_name}] branch protection rules"
+            gh api repos/${repository}/branches/${branch_name}/protection \
+                -X PUT \
+                -H "Accept: application/vnd.github.luke-cage-preview+json" \
+                -H "Content-Type: application/json" \
+                -f required_status_checks=null \
+                -f enforce_admins=$BRANCH_PROTECTION_ENFORCE_ADMINS \
+                -f required_pull_request_reviews[dismiss_stale_reviews]=$BRANCH_PROTECTION_DISMISS \
+                -f required_pull_request_reviews[require_code_owner_reviews]=$BRANCH_PROTECTION_CODE_OWNERS \
+                -f required_pull_request_reviews[required_approving_review_count]=$BRANCH_PROTECTION_REQUIRED_REVIEWERS \
+                -f restrictions=null
+        done
 
     elif [ "$BRANCH_PROTECTION_ENABLED" == "false" ]; then
-        echo "Disabling [${BRANCH_PROTECTION_NAME}] branch protection rules"
-        gh api repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection \
-            -X DELETE \
-            -H "Accept: application/vnd.github.luke-cage-preview+json" \
-            -H "Content-Type: application/json"
+        # loop through all the branches name
+        for branch_name in "${BRANCH_PROTECTION_NAME[@]}"; do
+            echo "Disabling [${branch_name}] branch protection rules"
+            gh api repos/${repository}/branches/${branch_name}/protection \
+                -X DELETE \
+                -H "Accept: application/vnd.github.luke-cage-preview+json" \
+                -H "Content-Type: application/json"
+        done
     fi
     echo " "
 
