@@ -45,19 +45,14 @@ BRANCH_PROTECTION_CODE_OWNERS=$INPUT_BRANCH_PROTECTION_CODE_OWNERS
 echo "BP: Code Owners        : $BRANCH_PROTECTION_CODE_OWNERS"
 BRANCH_PROTECTION_ENFORCE_ADMINS=$INPUT_BRANCH_PROTECTION_ENFORCE_ADMINS
 echo "BP: Enforce Admins     : $BRANCH_PROTECTION_ENFORCE_ADMINS"
-GITHUB_TOKEN="$INPUT_TOKEN"
+RAW_ACTION_SECRETS=$INPUT_ACTION_SECRETS
+ACTION_SECRETS=($RAW_ACTION_SECRETS)
+echo "Action secrets count   : ${#ACTION_SECRETS[@]}"
 echo "---------------------------------------------"
-
 echo " "
 
-# set temp path
-TEMP_PATH="/ghars/"
-cd /
-mkdir "$TEMP_PATH"
-cd "$TEMP_PATH"
-echo "Temp Path       : $TEMP_PATH"
-
-echo " "
+gh auth login --with-token
+echo "Logged in with provided token"
 
 # find username and repo name
 REPO_INFO=($(echo $GITHUB_REPOSITORY | tr "/" "\n"))
@@ -69,19 +64,7 @@ echo " "
 # get all repos, if specified
 if [ "$REPOSITORIES" == "ALL" ]; then
     echo "Getting all repositories for [${USERNAME}]"
-
-    PAGE=1
-    REPOSITORIES=()
-    while true; do
-        REPOSITORIES_STRING=$(curl -X GET -H "Accept: application/vnd.github.v3+json" -u ${USERNAME}:${GITHUB_TOKEN} --silent "${GITHUB_API_URL}/user/repos?affiliation=owner&per_page=100&page=${PAGE}" | jq '.[].full_name')
-
-        # If the latest reponse contains no repositories, exit the loop
-        [[ ! -z "$REPOSITORIES_STRING" ]] || break
-
-        # Append results to REPOSITORIES array, increment page number
-        readarray -t -O "${#REPOSITORIES[@]}" REPOSITORIES <<< "$REPOSITORIES_STRING"
-        PAGE=$((PAGE+1))
-    done
+    REPOSITORIES=$(gh repo list ${USERNAME} --no-archived --json owner,name | jq -r '(.[] | .owner.login + "/" + .name)')
 fi
 
 # loop through all the repos
@@ -92,76 +75,59 @@ for repository in "${REPOSITORIES[@]}"; do
     repository="${repository//\"}"
 
     echo "Repository name: [$repository]"
-
     echo " "
 
     echo "Setting repository options"
-  
-    # the argjson instead of just arg lets us pass the values not as strings
-    jq -n \
-    --argjson allowIssues $ALLOW_ISSUES \
-    --argjson allowProjects $ALLOW_PROJECTS \
-    --argjson allowWiki $ALLOW_WIKI \
-    --argjson squashMerge $SQUASH_MERGE \
-    --argjson mergeCommit $MERGE_COMMIT \
-    --argjson rebaseMerge $REBASE_MERGE \
-    --argjson autoMerge $AUTO_MERGE \
-    --argjson deleteHead $DELETE_HEAD \
-    '{
-        has_issues:$allowIssues,
-        has_projects:$allowProjects,
-        has_wiki:$allowWiki,
-        allow_squash_merge:$squashMerge,
-        allow_merge_commit:$mergeCommit,
-        allow_rebase_merge:$rebaseMerge,
-        allow_auto_merge:$autoMerge,
-        delete_branch_on_merge:$deleteHead,
-    }' \
-    | curl -d @- \
-        -X PATCH \
-        -H "Accept: application/vnd.github.v3+json" \
-        -H "Content-Type: application/json" \
-        -u ${USERNAME}:${GITHUB_TOKEN} \
-        --silent \
-        ${GITHUB_API_URL}/repos/${repository}
-
+    gh repo edit $repository \
+        --enable-issues=$ALLOW_ISSUES \
+        --enable-projects=$ALLOW_PROJECTS \
+        --enable-wiki=$ALLOW_WIKI \
+        --enable-squash-merge=$SQUASH_MERGE \
+        --enable-merge-commit=$MERGE_COMMIT \
+        --enable-rebase-merge=$REBASE_MERGE \
+        --enable-auto-merge=$AUTO_MERGE \
+        --delete-branch-on-merge=$DELETE_HEAD
     echo " "
 
     if [ "$BRANCH_PROTECTION_ENABLED" == "true" ]; then
-        echo "Setting [${BRANCH_PROTECTION_NAME}] branch protection rules"
-        
-        # the argjson instead of just arg lets us pass the values not as strings
-        jq -n \
-        --argjson enforceAdmins $BRANCH_PROTECTION_ENFORCE_ADMINS \
-        --argjson dismissStaleReviews $BRANCH_PROTECTION_DISMISS \
-        --argjson codeOwnerReviews $BRANCH_PROTECTION_CODE_OWNERS \
-        --argjson reviewCount $BRANCH_PROTECTION_REQUIRED_REVIEWERS \
-        '{
-            required_status_checks:null,
-            enforce_admins:$enforceAdmins,
-            required_pull_request_reviews:{
-                dismiss_stale_reviews:$dismissStaleReviews,
-                require_code_owner_reviews:$codeOwnerReviews,
-                required_approving_review_count:$reviewCount
-            },
-            restrictions:null
-        }' \
-        | curl -d @- \
+        echo "Activating [${BRANCH_PROTECTION_NAME}] branch protection rules"
+        gh api repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection \
             -X PUT \
             -H "Accept: application/vnd.github.luke-cage-preview+json" \
             -H "Content-Type: application/json" \
-            -u ${USERNAME}:${GITHUB_TOKEN} \
-            --silent \
-            ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection
+            -f required_status_checks=null \
+            -f enforce_admins=$BRANCH_PROTECTION_ENFORCE_ADMINS \
+            -f required_pull_request_reviews[dismiss_stale_reviews]=$BRANCH_PROTECTION_DISMISS \
+            -f required_pull_request_reviews[require_code_owner_reviews]=$BRANCH_PROTECTION_CODE_OWNERS \
+            -f required_pull_request_reviews[required_approving_review_count]=$BRANCH_PROTECTION_REQUIRED_REVIEWERS \
+            -f restrictions=null
+
     elif [ "$BRANCH_PROTECTION_ENABLED" == "false" ]; then
-        curl \
+        echo "Disabling [${BRANCH_PROTECTION_NAME}] branch protection rules"
+        gh api repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection \
             -X DELETE \
             -H "Accept: application/vnd.github.luke-cage-preview+json" \
-            -H "Content-Type: application/json" \
-            -u ${USERNAME}:${GITHUB_TOKEN} \
-            --silent \
-            ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection
+            -H "Content-Type: application/json"
     fi
+    echo " "
+
+    echo "Setting repository action secrets"
+    # loop through all the secrets name
+    for action_secret in "${ACTION_SECRETS[@]}"; do
+        echo ${action_secret} | while IFS='=' read secret_name secret_value; do
+            if [ -z "${secret_value}" ]; then
+                echo "Removing [${secret_name}] secret"
+                gh secret delete ${secret_name} \
+                    --repo ${repository}
+            else
+                echo "Setting [${secret_name}] secret"
+                gh secret set ${secret_name} \
+                    --body "${secret_value}" \
+                    --repo ${repository}
+            fi
+        done
+    done
+    echo " "
 
     echo "Completed [${repository}]"
     echo "::endgroup::"

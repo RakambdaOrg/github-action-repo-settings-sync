@@ -6,11 +6,11 @@ RUN apk add --no-cache bash
 # add jq for creating json
 RUN apk add jq
 
-# add curl for pull requests via github api
-RUN apk add curl
+# add github-cli for secrets
+RUN echo "@community https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
+    && apk add github-cli@community
 
 COPY error-matcher.json /error-matcher.json
-
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod 777 entrypoint.sh
