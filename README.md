@@ -5,8 +5,7 @@
 
 <b>Github Action to setup repositories settings and keep them in sync</b>
 
-[![version](https://img.shields.io/github/v/release/kbrashears5/github-action-repo-settings-sync)](https://img.shields.io/github/v/release/kbrashears5/github-action-repo-settings-sync)
-[![Build Status](https://dev.azure.com/kbrashears5/github/_apis/build/status/kbrashears5.github-action-repo-settings-sync?branchName=master)](https://dev.azure.com/kbrashears5/github/_build/latest?definitionId=29&branchName=master)
+[![version](https://img.shields.io/github/v/release/rakambda/github-action-repo-settings-sync)](https://img.shields.io/github/v/release/rakambda/github-action-repo-settings-sync)
 
 </div>
 
@@ -31,12 +30,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Repo Setup
-        uses: kbrashears5/github-action-repo-settings-sync@v1.0.0
+        uses: rakambda/github-action-repo-settings-sync@v1.0.0
         env:
           GH_TOKEN: ${{ github.token }}
         with:
           REPOSITORIES: |
-            kbrashears5/github-action-repo-settings-sync
+            owner/repo1
+            owner/repo2
           ALLOW_ISSUES: 'true'
           ALLOW_PROJECTS: 'true'
           ALLOW_WIKI: 'true'
