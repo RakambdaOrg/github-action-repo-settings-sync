@@ -49,13 +49,13 @@ function set_rulesets(){
           -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Content-Type: application/json" \
-          --input "${ruleset_definition}"
+          --input "${GITHUB_WORKSPACE}/${ruleset_definition}"
     else
       gh api "/repos/${repository}/rulesets/${ruleset_id}" \
           -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Content-Type: application/json" \
-          --input "${ruleset_definition}"
+          --input "${GITHUB_WORKSPACE}/${ruleset_definition}"
     fi
   done
 }
