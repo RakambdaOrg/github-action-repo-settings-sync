@@ -42,7 +42,8 @@ function set_rulesets(){
   echo "Setting rulesets"
 
   local existing_rulesets=$(gh ruleset list --repo ${repository})
-  echo "Existing rulesets:\n${existing_rulesets}}"
+  echo "Existing rulesets:"
+  echo "${existing_rulesets}"
 
   for ruleset_definition in "${RULESET_DEFINITIONS[@]}"; do
     local ruleset_name=$(jq ".name" "${GITHUB_WORKSPACE}/${ruleset_definition}")
@@ -59,7 +60,7 @@ function set_rulesets(){
     else
       echo "Updating ruleset ${ruleset_name} (${ruleset_id}) from ${ruleset_definition}"
       gh api "/repos/${repository}/rulesets/${ruleset_id}" \
-          -X POST \
+          -X PUT \
           -H "Accept: application/vnd.github+json" \
           -H "Content-Type: application/json" \
           --input "${GITHUB_WORKSPACE}/${ruleset_definition}"
