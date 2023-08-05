@@ -26,7 +26,7 @@ function set_global_settings(){
 
 function delete_branch_protection(){
   # Temporary to migrate to new rulesets
-  local branches=($(gh api "/repos/${repository}/branches" | jq ".[] | select( .protected == true ) | .name"))
+  local branches=($(gh api "/repos/${repository}/branches" | jq ".[] | select( .protection.enabled == true ) | .name"))
   for branch_name in "${branches[@]}"; do
     local branch_name=${branch_name//\"}
     echo "Deleting branch protection for ${branch_name}"
@@ -47,6 +47,7 @@ function set_rulesets(){
   for ruleset_definition in "${RULESET_DEFINITIONS[@]}"; do
     local ruleset_name=$(jq ".name" "${GITHUB_WORKSPACE}/${ruleset_definition}")
     local ruleset_id=$(echo "${existing_rulesets}" | grep "${ruleset_name}" | head -n1 | awk '{print $1;}')
+    echo "ID: $ruleset_id"
 
     if [ -z "${ruleset_id}" ]; then
       echo "Setting ruleset ${ruleset_name} from ${ruleset_definition}"
