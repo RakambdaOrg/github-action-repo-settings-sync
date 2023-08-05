@@ -8,7 +8,8 @@ RUN apk add jq
 
 # add github-cli for secrets
 RUN echo "@community https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-    && apk add github-cli@community
+    && apk update \
+    && apk add github-cli@community jq
 
 COPY error-matcher.json /error-matcher.json
 COPY entrypoint.sh /entrypoint.sh
