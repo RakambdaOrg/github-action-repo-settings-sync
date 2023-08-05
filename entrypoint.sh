@@ -26,7 +26,7 @@ function set_global_settings(){
 
 function delete_branch_protection(){
   # Temporary to migrate to new rulesets
-  local branches=$(gh api "/repos/${repository}/branches" | jq ".[] | select( .protected == true ) | .name")
+  local branches=($(gh api "/repos/${repository}/branches" | jq ".[] | select( .protected == true ) | .name"))
   for branch_name in "${branches[@]}"; do
     local branch_name=${branch_name//\"}
     echo "Deleting branch protection for ${branch_name}"
