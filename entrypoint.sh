@@ -46,8 +46,14 @@ function set_rulesets(){
 
   for ruleset_definition in "${RULESET_DEFINITIONS[@]}"; do
     local ruleset_name=$(jq ".name" "${GITHUB_WORKSPACE}/${ruleset_definition}")
-    local ruleset_id=$(echo "${existing_rulesets}" | grep "${ruleset_name}" | head -n1 | awk '{print $1;}')
-    echo "ID: $ruleset_id"
+    local ruleset_id=$(echo "${existing_rulesets}" | grep "${ruleset_name}" | head -n 1 | awk '{print $1;}')
+
+    echo "GREP"
+    echo "${existing_rulesets}" | grep "${ruleset_name}"
+    echo "HEAD"
+    echo "${existing_rulesets}" | grep "${ruleset_name}" | head -n 1
+    echo "AWK"
+    echo "${existing_rulesets}" | grep "${ruleset_name}" | head -n 1 | awk '{print $1;}'
 
     if [ -z "${ruleset_id}" ]; then
       echo "Setting ruleset ${ruleset_name} from ${ruleset_definition}"
