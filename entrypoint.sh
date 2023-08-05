@@ -42,6 +42,7 @@ function set_rulesets(){
   echo "Setting rulesets"
 
   local existing_rulesets=$(gh ruleset list --repo ${repository})
+  echo "Existing rulesets:\n${existing_rulesets}}"
 
   for ruleset_definition in "${RULESET_DEFINITIONS[@]}"; do
     local ruleset_name=$(jq ".name" "${GITHUB_WORKSPACE}/${ruleset_definition}")
