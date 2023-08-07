@@ -143,10 +143,14 @@ function log_and_set_inputs() {
     echo "Allow Projects             : ${ALLOW_PROJECTS}"
     ALLOW_WIKI=${INPUT_ALLOW_WIKI}
     echo "Allow Wiki                 : ${ALLOW_WIKI}"
-    IS_TEMPLATE=$INPUT_IS_TEMPLATE
-    echo "Is template                : $IS_TEMPLATE"
+    IS_TEMPLATE=${INPUT_IS_TEMPLATE}
+    echo "Is template                : ${IS_TEMPLATE}"
     SQUASH_MERGE=${INPUT_SQUASH_MERGE}
     echo "Squash Merge               : ${SQUASH_MERGE}"
+    SQUASH_PR_TITLE=${INPUT_SQUASH_PR_TITLE}
+    echo "Squash PR Title            : ${SQUASH_PR_TITLE}"
+    SQUASH_PR_MESSAGE=${INPUT_SQUASH_PR_MESSAGE}
+    echo "Squash PR Message          : ${SQUASH_PR_MESSAGE}"
     MERGE_COMMIT=${INPUT_MERGE_COMMIT}
     echo "Merge Commit               : ${MERGE_COMMIT}"
     REBASE_MERGE=${INPUT_REBASE_MERGE}
@@ -157,8 +161,8 @@ function log_and_set_inputs() {
     echo "Allow update branch        : ${ALLOW_UPDATE_BRANCH}"
     DELETE_HEAD=${INPUT_DELETE_HEAD}
     echo "Delete Head                : ${DELETE_HEAD}"
-    ACTION_ACCESS_LEVEL=$INPUT_ACTION_ACCESS_LEVEL
-    echo "Action access level        : $ACTION_ACCESS_LEVEL"
+    ACTION_ACCESS_LEVEL=${INPUT_ACTION_ACCESS_LEVEL}
+    echo "Action access level        : ${ACTION_ACCESS_LEVEL}"
     RAW_RULESET_DEFINITIONS=${INPUT_RULESET_DEFINITIONS}
     RULESET_DEFINITIONS=(${RAW_RULESET_DEFINITIONS})
     echo "Ruleset definitions        : ${RULESET_DEFINITIONS}"
