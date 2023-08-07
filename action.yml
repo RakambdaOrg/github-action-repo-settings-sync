@@ -21,6 +21,10 @@ inputs:
     description: 'Whether or not to allow wiki on the repo'
     required: false
     default: 'true'
+  IS_TEMPLATE:
+    description: 'Whether or not the repository is a template'
+    required: false
+    default: 'false'
   SQUASH_MERGE:
     description: 'Whether or not to allow squash merges on the repo'
     required: false
@@ -41,10 +45,22 @@ inputs:
     description: 'Whether or not to delete head branch after merges'
     required: false
     default: 'false'
+  SQUASH_PR_TITLE:
+    description: 'Squash PR title'
+    required: false
+    default: 'COMMIT_OR_PR_TITLE'
+  SQUASH_PR_MESSAGE:
+    description: 'Squash PR message'
+    required: false
+    default: 'COMMIT_MESSAGES'
   RULESET_DEFINITIONS:
     description: 'Paths to a file containing ruleset to apply'
     required: false
     default: ''
+  ACTION_ACCESS_LEVEL:
+    description: 'Action access level'
+    required: false
+    default: 'none'
   ACTION_SECRETS:
     description: 'Action secrets to deploy on every repo'
     required: false

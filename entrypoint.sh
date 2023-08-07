@@ -13,15 +13,21 @@ function set_global_settings(){
   local repository="${1}"
   echo "Setting repository options"
 
-  gh repo edit "${repository}" \
-      --enable-issues=${ALLOW_ISSUES} \
-      --enable-projects=${ALLOW_PROJECTS} \
-      --enable-wiki=${ALLOW_WIKI} \
-      --enable-squash-merge=${SQUASH_MERGE} \
-      --enable-merge-commit=${MERGE_COMMIT} \
-      --enable-rebase-merge=${REBASE_MERGE} \
-      --enable-auto-merge=${AUTO_MERGE} \
-      --delete-branch-on-merge=${DELETE_HEAD}
+  gh api "repos/${repository}" \
+      -X PATCH \
+      -H "Accept: application/vnd.github+json" \
+      -H "Content-Type: application/json" \
+      -F has_issues=${ALLOW_ISSUES} \
+      -F has_projects=${ALLOW_PROJECTS} \
+      -F has_wiki=${ALLOW_WIKI} \
+      -F allow_squash_merge=${SQUASH_MERGE} \
+      -F allow_merge_commit=${MERGE_COMMIT} \
+      -F allow_rebase_merge=${REBASE_MERGE} \
+      -F allow_auto_merge=${AUTO_MERGE} \
+      -F delete_branch_on_merge=${DELETE_HEAD} \
+      -F is_template=${IS_TEMPLATE} \
+      -F squash_merge_commit_title=${SQUASH_PR_TITLE} \
+      -F squash_merge_commit_message=${SQUASH_PR_MESSAGE}
 }
 
 function delete_branch_protection(){
@@ -85,6 +91,17 @@ function set_secrets() {
   done
 }
 
+function set_secrets() {
+  local repository="${1}"
+  echo "Setting action access level"
+
+  gh api "repos/${repository}/actions/permissions/access" \
+      -X PUT \
+      -H "Accept: application/vnd.github+json" \
+      -H "Content-Type: application/json" \
+      -F access_level=${ACTION_ACCESS_LEVEL}
+}
+
 function handle_repository() {
     # trim the quotes
     local repository=${1//\"}
@@ -99,6 +116,9 @@ function handle_repository() {
     echo " "
 
     set_rulesets "${repository}"
+    echo " "
+
+    set_action_access "${repository}"
     echo " "
 
     set_secrets "${repository}"
@@ -122,6 +142,8 @@ function log_and_set_inputs() {
     echo "Allow Projects             : ${ALLOW_PROJECTS}"
     ALLOW_WIKI=${INPUT_ALLOW_WIKI}
     echo "Allow Wiki                 : ${ALLOW_WIKI}"
+    IS_TEMPLATE=$INPUT_IS_TEMPLATE
+    echo "Is template                : $IS_TEMPLATE"
     SQUASH_MERGE=${INPUT_SQUASH_MERGE}
     echo "Squash Merge               : ${SQUASH_MERGE}"
     MERGE_COMMIT=${INPUT_MERGE_COMMIT}
@@ -132,6 +154,8 @@ function log_and_set_inputs() {
     echo "Auto-Merge                 : ${AUTO_MERGE}"
     DELETE_HEAD=${INPUT_DELETE_HEAD}
     echo "Delete Head                : ${DELETE_HEAD}"
+    ACTION_ACCESS_LEVEL=$INPUT_ACTION_ACCESS_LEVEL
+    echo "Action access level        : $ACTION_ACCESS_LEVEL"
     RAW_RULESET_DEFINITIONS=${INPUT_RULESET_DEFINITIONS}
     RULESET_DEFINITIONS=(${RAW_RULESET_DEFINITIONS})
     echo "Ruleset definitions        : ${RULESET_DEFINITIONS}"
