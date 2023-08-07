@@ -91,7 +91,7 @@ function set_secrets() {
   done
 }
 
-function set_secrets() {
+function set_action_access() {
   local repository="${1}"
   echo "Setting action access level"
 
