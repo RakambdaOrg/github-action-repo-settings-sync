@@ -41,6 +41,10 @@ inputs:
     description: 'Whether or not to allow auto-merge on the repo'
     required: false
     default: 'false'
+  ALLOW_UPDATE_BRANCH:
+    description: 'Whether or not to allow update branch on PRs even if not required'
+    required: false
+    default: 'false'
   DELETE_HEAD:
     description: 'Whether or not to delete head branch after merges'
     required: false

@@ -24,6 +24,7 @@ function set_global_settings(){
       -F allow_merge_commit=${MERGE_COMMIT} \
       -F allow_rebase_merge=${REBASE_MERGE} \
       -F allow_auto_merge=${AUTO_MERGE} \
+      -F allow_update_branch=${ALLOW_UPDATE_BRANCH} \
       -F delete_branch_on_merge=${DELETE_HEAD} \
       -F is_template=${IS_TEMPLATE} \
       -F squash_merge_commit_title=${SQUASH_PR_TITLE} \
@@ -152,6 +153,8 @@ function log_and_set_inputs() {
     echo "Rebase Merge               : ${REBASE_MERGE}"
     AUTO_MERGE=${INPUT_AUTO_MERGE}
     echo "Auto-Merge                 : ${AUTO_MERGE}"
+    ALLOW_UPDATE_BRANCH=${INPUT_ALLOW_UPDATE_BRANCH}
+    echo "Allow update branch        : ${ALLOW_UPDATE_BRANCH}"
     DELETE_HEAD=${INPUT_DELETE_HEAD}
     echo "Delete Head                : ${DELETE_HEAD}"
     ACTION_ACCESS_LEVEL=$INPUT_ACTION_ACCESS_LEVEL

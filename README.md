@@ -44,6 +44,7 @@ jobs:
           MERGE_COMMIT: true
           REBASE_MERGE: true
           AUTO_MERGE: false
+          ALLOW_UPDATE_BRANCH: false
           DELETE_HEAD: false
           SQUASH_PR_TITLE: COMMIT_OR_PR_TITLE
           SQUASH_PR_MESSAGE: COMMIT_MESSAGES
@@ -68,6 +69,7 @@ jobs:
 | MERGE_COMMIT        | false    | true                 | Whether or not to allow merge commits on the repo                                        |
 | REBASE_MERGE        | false    | true                 | Whether or not to allow rebase merges on the repo                                        |
 | AUTO_MERGE          | false    | false                | Whether or not to allow auto-merge on the repo                                           |
+| ALLOW_UPDATE_BRANCH | false    | false                | Whether or not to allow update branch on PRs even if not required                        |
 | SQUASH_PR_TITLE     | false    | 'COMMIT_OR_PR_TITLE' | Squash PR title                                                                          |
 | SQUASH_PR_MESSAGE   | false    | 'COMMIT_MESSAGES'    | Squash PR message                                                                        |
 | DELETE_HEAD         | false    | false                | Whether or not to delete head branch after merges                                        |
