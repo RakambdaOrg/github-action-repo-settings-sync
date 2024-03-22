@@ -64,13 +64,19 @@ function set_rulesets(){
           -H "Accept: application/vnd.github+json" \
           -H "Content-Type: application/json" \
           --input "${GITHUB_WORKSPACE}/${ruleset_definition}"
+    elif [ -s /path-to-file/filename.txt ]; then
+        echo "Updating ruleset ${ruleset_name} (${ruleset_id}) from ${ruleset_definition}"
+        gh api "/repos/${repository}/rulesets/${ruleset_id}" \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            --input "${GITHUB_WORKSPACE}/${ruleset_definition}"
     else
-      echo "Updating ruleset ${ruleset_name} (${ruleset_id}) from ${ruleset_definition}"
+      echo "Deleting ruleset ${ruleset_name} (${ruleset_id})"
       gh api "/repos/${repository}/rulesets/${ruleset_id}" \
-          -X PUT \
+          -X DELETE \
           -H "Accept: application/vnd.github+json" \
-          -H "Content-Type: application/json" \
-          --input "${GITHUB_WORKSPACE}/${ruleset_definition}"
+          -H "Content-Type: application/json"
     fi
   done
 }
