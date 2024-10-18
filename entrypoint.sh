@@ -109,6 +109,18 @@ function set_action_access() {
       -F access_level=${ACTION_ACCESS_LEVEL}
 }
 
+function set_action_status() {
+  local repository="${1}"
+  echo "Setting action status"
+
+  gh api "repos/${repository}/actions/permissions" \
+      -X PUT \
+      -H "Accept: application/vnd.github+json" \
+      -H "Content-Type: application/json" \
+      -F enabled=${ACTION_ENABLED_REPOSITORIES} \
+      -F allowed_actions=${ACTION_ALLOWED_ACTIONS}
+}
+
 function handle_repository() {
     # trim the quotes
     local repository=${1//\"}
@@ -123,6 +135,9 @@ function handle_repository() {
     echo " "
 
     set_rulesets "${repository}"
+    echo " "
+
+    set_action_status "${repository}"
     echo " "
 
     set_action_access "${repository}"
@@ -142,39 +157,43 @@ function log_and_set_inputs() {
     echo "---------------------------------------------"
     RAW_REPOSITORIES="${INPUT_REPOSITORIES}"
     REPOSITORIES=(${RAW_REPOSITORIES})
-    echo "Repositories               : ${REPOSITORIES}"
+    echo "Repositories                : ${REPOSITORIES}"
     ALLOW_ISSUES=${INPUT_ALLOW_ISSUES}
-    echo "Allow Issues               : ${ALLOW_ISSUES}"
+    echo "Allow Issues                : ${ALLOW_ISSUES}"
     ALLOW_PROJECTS=${INPUT_ALLOW_PROJECTS}
-    echo "Allow Projects             : ${ALLOW_PROJECTS}"
+    echo "Allow Projects              : ${ALLOW_PROJECTS}"
     ALLOW_WIKI=${INPUT_ALLOW_WIKI}
-    echo "Allow Wiki                 : ${ALLOW_WIKI}"
+    echo "Allow Wiki                  : ${ALLOW_WIKI}"
     IS_TEMPLATE=${INPUT_IS_TEMPLATE}
-    echo "Is template                : ${IS_TEMPLATE}"
+    echo "Is template                 : ${IS_TEMPLATE}"
     SQUASH_MERGE=${INPUT_SQUASH_MERGE}
-    echo "Squash Merge               : ${SQUASH_MERGE}"
+    echo "Squash Merge                : ${SQUASH_MERGE}"
     SQUASH_PR_TITLE=${INPUT_SQUASH_PR_TITLE}
-    echo "Squash PR Title            : ${SQUASH_PR_TITLE}"
+    echo "Squash PR Title             : ${SQUASH_PR_TITLE}"
     SQUASH_PR_MESSAGE=${INPUT_SQUASH_PR_MESSAGE}
-    echo "Squash PR Message          : ${SQUASH_PR_MESSAGE}"
+    echo "Squash PR Message           : ${SQUASH_PR_MESSAGE}"
     MERGE_COMMIT=${INPUT_MERGE_COMMIT}
-    echo "Merge Commit               : ${MERGE_COMMIT}"
+    echo "Merge Commit                : ${MERGE_COMMIT}"
     REBASE_MERGE=${INPUT_REBASE_MERGE}
-    echo "Rebase Merge               : ${REBASE_MERGE}"
+    echo "Rebase Merge                : ${REBASE_MERGE}"
     AUTO_MERGE=${INPUT_AUTO_MERGE}
-    echo "Auto-Merge                 : ${AUTO_MERGE}"
+    echo "Auto-Merge                  : ${AUTO_MERGE}"
     ALLOW_UPDATE_BRANCH=${INPUT_ALLOW_UPDATE_BRANCH}
-    echo "Allow update branch        : ${ALLOW_UPDATE_BRANCH}"
+    echo "Allow update branch         : ${ALLOW_UPDATE_BRANCH}"
     DELETE_HEAD=${INPUT_DELETE_HEAD}
-    echo "Delete Head                : ${DELETE_HEAD}"
+    echo "Delete Head                 : ${DELETE_HEAD}"
     ACTION_ACCESS_LEVEL=${INPUT_ACTION_ACCESS_LEVEL}
-    echo "Action access level        : ${ACTION_ACCESS_LEVEL}"
+    echo "Action access level         : ${ACTION_ACCESS_LEVEL}"
+    ACTION_ENABLED_REPOSITORIES=${INPUT_ACTION_ENABLED_REPOSITORIES}
+    echo "Action enabled repositories : ${ACTION_ENABLED_REPOSITORIES}"
+    ACTION_ALLOWED_ACTIONS=${INPUT_ACTION_ALLOWED_ACTIONS}
+    echo "Action allowed actions      : ${ACTION_ALLOWED_ACTIONS}"
     RAW_RULESET_DEFINITIONS=${INPUT_RULESET_DEFINITIONS}
     RULESET_DEFINITIONS=(${RAW_RULESET_DEFINITIONS})
-    echo "Ruleset definitions        : ${RULESET_DEFINITIONS}"
+    echo "Ruleset definitions         : ${RULESET_DEFINITIONS}"
     RAW_ACTION_SECRETS=${INPUT_ACTION_SECRETS}
     ACTION_SECRETS=(${RAW_ACTION_SECRETS})
-    echo "Action secrets count       : ${#ACTION_SECRETS[@]}"
+    echo "Action secrets count        : ${#ACTION_SECRETS[@]}"
     echo "---------------------------------------------"
     echo "::endgroup::"
     echo " "

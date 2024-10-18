@@ -65,6 +65,14 @@ inputs:
     description: 'Action access level'
     required: false
     default: 'none'
+  ACTION_ENABLED_REPOSITORIES:
+    description: 'Control repository allowance to run actions'
+    required: false
+    default: 'false'
+  ACTION_ALLOWED_ACTIONS:
+    description: 'Permission policy to run actions and reusable workflows'
+    required: false
+    default: 'all'
   ACTION_SECRETS:
     description: 'Action secrets to deploy on every repo'
     required: false

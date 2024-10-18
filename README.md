@@ -49,6 +49,8 @@ jobs:
           SQUASH_PR_TITLE: COMMIT_OR_PR_TITLE
           SQUASH_PR_MESSAGE: COMMIT_MESSAGES
           ACTION_ACCESS_LEVEL: none
+          ACTION_ENABLED_REPOSITORIES: true
+          ACTION_ALLOWED_ACTIONS: all
           RULESET_DEFINITIONS: |
             ./example-ruleset.json
           ACTION_SECRETS:
@@ -58,21 +60,23 @@ jobs:
 
 ## Parameters
 
-| Parameter           | Required | Default              | Description                                                                              |
-|---------------------|----------|----------------------|------------------------------------------------------------------------------------------|
-| REPOSITORIES        | false    | 'ALL'                | Github repositories to setup. Default will get all public repositories for your username |
-| ALLOW_ISSUES        | false    | true                 | Whether or not to allow issues on the repo                                               |
-| ALLOW_PROJECTS      | false    | true                 | Whether or not to allow projects on the repo                                             |
-| ALLOW_WIKI          | false    | true                 | Whether or not to allow wiki on the repo                                                 |
-| IS_TEMPLATE         | false    | false                | Whether or not the repository is a template                                              |
-| SQUASH_MERGE        | false    | true                 | Whether or not to allow squash merges on the repo                                        |
-| MERGE_COMMIT        | false    | true                 | Whether or not to allow merge commits on the repo                                        |
-| REBASE_MERGE        | false    | true                 | Whether or not to allow rebase merges on the repo                                        |
-| AUTO_MERGE          | false    | false                | Whether or not to allow auto-merge on the repo                                           |
-| ALLOW_UPDATE_BRANCH | false    | false                | Whether or not to allow update branch on PRs even if not required                        |
-| SQUASH_PR_TITLE     | false    | 'COMMIT_OR_PR_TITLE' | Squash PR title                                                                          |
-| SQUASH_PR_MESSAGE   | false    | 'COMMIT_MESSAGES'    | Squash PR message                                                                        |
-| DELETE_HEAD         | false    | false                | Whether or not to delete head branch after merges                                        |
-| ACTION_ACCESS_LEVEL | false    | none                 | Visibility of actions/workflows from outside repositories (none, user, organization)     |
-| RULESET_DEFINITIONS | false    |                      | Paths to a file containing ruleset to apply.                                             |
-| ACTION_SECRETS      | false    |                      | Action secrets to deploy on every repo. Set empty value to delete.                       |
+| Parameter                   | Required | Default              | Description                                                                              |
+|-----------------------------|----------|----------------------|------------------------------------------------------------------------------------------|
+| REPOSITORIES                | false    | 'ALL'                | Github repositories to setup. Default will get all public repositories for your username |
+| ALLOW_ISSUES                | false    | true                 | Whether or not to allow issues on the repo                                               |
+| ALLOW_PROJECTS              | false    | true                 | Whether or not to allow projects on the repo                                             |
+| ALLOW_WIKI                  | false    | true                 | Whether or not to allow wiki on the repo                                                 |
+| IS_TEMPLATE                 | false    | false                | Whether or not the repository is a template                                              |
+| SQUASH_MERGE                | false    | true                 | Whether or not to allow squash merges on the repo                                        |
+| MERGE_COMMIT                | false    | true                 | Whether or not to allow merge commits on the repo                                        |
+| REBASE_MERGE                | false    | true                 | Whether or not to allow rebase merges on the repo                                        |
+| AUTO_MERGE                  | false    | false                | Whether or not to allow auto-merge on the repo                                           |
+| ALLOW_UPDATE_BRANCH         | false    | false                | Whether or not to allow update branch on PRs even if not required                        |
+| SQUASH_PR_TITLE             | false    | 'COMMIT_OR_PR_TITLE' | Squash PR title                                                                          |
+| SQUASH_PR_MESSAGE           | false    | 'COMMIT_MESSAGES'    | Squash PR message                                                                        |
+| DELETE_HEAD                 | false    | false                | Whether or not to delete head branch after merges                                        |
+| ACTION_ACCESS_LEVEL         | false    | none                 | Visibility of actions/workflows from outside repositories (none, user, organization)     |
+| ACTION_ENABLED_REPOSITORIES | false    | false                | Whether or not to allow actions on the repo                                              |
+| ACTION_ALLOWED_ACTIONS      | false    | all                  | Permission policy to run actions and reusable workflows (all, local_only, selected)      |
+| RULESET_DEFINITIONS         | false    |                      | Paths to a file containing ruleset to apply.                                             |
+| ACTION_SECRETS              | false    |                      | Action secrets to deploy on every repo. Set empty value to delete.                       |
