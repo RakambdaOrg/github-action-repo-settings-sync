@@ -6,8 +6,9 @@ export interface RepositoryMetadata {
     ownerType: string;
     plan: string;
     private: boolean;
-    properties: { property_name: string, value: string | string[] | null }[]
-    visibility: string
+    properties: { property_name: string, value: string | string[] | null }[];
+    visibility: string;
+    defaultBranch?: string;
 }
 
 export interface RepositoryConfigurationRequest {

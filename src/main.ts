@@ -14,6 +14,7 @@ import {ActionPermissionsAccessRule} from "./rule/actionPermissionsAccessRule";
 import {RulesetsRule} from "./rule/rulesetsRule";
 import {RulesetsDeletionRule} from "./rule/rulesetsDeletionRule";
 import {ActionSecrets} from "./rule/actionSecrets";
+import {FilesRule} from "./rule/filesRule";
 
 export class Main {
     private readonly github: GithubWrapper;
@@ -36,6 +37,7 @@ export class Main {
             new ActionPermissionsRule(this.github),
             new ActionPermissionsAccessRule(this.github),
             new ActionSecrets(this.github),
+            new FilesRule(this.github),
         ];
     }
 

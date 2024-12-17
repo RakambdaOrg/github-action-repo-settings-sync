@@ -16,6 +16,13 @@ type RepositoryResponse = {
         type: string;
     };
     visibility?: string;
+    default_branch?: string;
+};
+
+type FileContent = {
+    type: "dir" | "file" | "submodule" | "symlink";
+    sha: string;
+    content?: string;
 };
 
 export default class GithubWrapper {
@@ -65,7 +72,8 @@ export default class GithubWrapper {
                 private: repository.private,
                 properties: properties,
                 visibility: repository.visibility ?? "public",
-                archived: repository.archived ?? false
+                archived: repository.archived ?? false,
+                defaultBranch: repository.default_branch
             });
         }
         return repositoriesMetadata;
@@ -192,6 +200,59 @@ export default class GithubWrapper {
         })).data;
     }
 
+    public async listRepositoryBranches(owner: string, repo: string): Promise<{ name: string; commit: { sha: string }; }[]> {
+        return await this.octokit.paginate("GET /repos/{owner}/{repo}/branches", {
+            owner: owner,
+            repo: repo,
+        });
+    }
+
+    public async getFileMeta(owner: string, repo: string, path: string, ref?: string): Promise<FileContent> {
+        const result = (await this.octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+            owner: owner,
+            repo: repo,
+            path: path,
+            ref: ref
+        })).data;
+
+        if (result.constructor !== Object) {
+            throw new Error("This shouldn't happen");
+        }
+
+        const resultObj = result as FileContent;
+        return {
+            ...resultObj,
+            content: resultObj.content && this.decodeBase64(resultObj.content),
+        };
+    }
+
+    public async editFile(owner: string, repo: string, path: string, message: string, content: string, sha?: string, branch?: string, committer?: { name: string, email: string }): Promise<{ commit: { sha?: string } }> {
+        const encodedContent = this.encodeBase64(content);
+
+        return (await this.octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
+            owner: owner,
+            repo: repo,
+            path: path,
+            message: message,
+            content: encodedContent,
+            sha: sha,
+            branch: branch,
+            committer: committer,
+        })).data;
+    }
+
+    public async deleteFile(owner: string, repo: string, path: string, message: string, sha: string, branch?: string, committer?: { name: string, email: string }): Promise<{ commit: { sha?: string } }> {
+        return (await this.octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
+            owner: owner,
+            repo: repo,
+            path: path,
+            message: message,
+            sha: sha,
+            branch: branch,
+            committer: committer,
+        })).data;
+    }
+
     private async encryptValue(key: string, value: string): Promise<string> {
         await _sodium.ready;
         const sodium = _sodium;
@@ -200,5 +261,13 @@ export default class GithubWrapper {
         const binVal = sodium.from_string(value);
         const encBytes = sodium.crypto_box_seal(binVal, binKey);
         return sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL);
+    }
+
+    private encodeBase64(content: string): string {
+        return Buffer.from(content).toString('base64');
+    }
+
+    private decodeBase64(content: string): string {
+        return Buffer.from(content, 'base64').toString();
     }
 }

@@ -11,6 +11,7 @@ export interface Element {
     features?: RepositoryConfigurationRequest;
     rulesets?: RepositoryRulesetRequest[];
     deleteRulesets?: string[];
+    file?: FilesOperation;
     actions?: {
         permissions?: RepositoryActionsPermissionsRequest;
         accessPermissions?: RepositoryActionsAccessPermissionsRequest;
@@ -31,4 +32,15 @@ export interface ElementByProperty extends Element {
 export interface ElementByAll extends Element {
     searchType: "all";
     org: boolean;
+}
+
+export interface FilesOperation {
+    branchName?: string;
+    files: File[];
+    committer?: { name?: string; email?: string; };
+}
+
+export interface File {
+    source: string;
+    destination: string;
 }
