@@ -81,7 +81,7 @@ export class Main {
             data = data.filter((r) => this.github.hasProperty(r.properties, element));
         }
         if (element.exclude) {
-            data = data.filter(repo => !(element.exclude?.includes(repo.fullName) ?? false))
+            data = data.filter(repo => !(element.exclude?.includes(repo.fullName) ?? false));
         }
         return data.filter(repo => !(repo.archived ?? true));
     }

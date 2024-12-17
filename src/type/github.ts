@@ -10,7 +10,7 @@ export type RepositoryMetadata = {
     visibility: string;
     defaultBranch?: string;
     html_url: string;
-}
+};
 
 export type RepositoryConfigurationRequest = {
     has_issues?: boolean;
@@ -29,7 +29,7 @@ export type RepositoryConfigurationRequest = {
     squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
     merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
     merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
-}
+};
 
 export type RepositoryRulesetRequest = {
     name: string;
@@ -46,25 +46,25 @@ export type RuleActor = {
     actor_id?: number | null | undefined;
     actor_type: "Integration" | "OrganizationAdmin" | "RepositoryRole" | "Team" | "DeployKey";
     bypass_mode: "always" | "pull_request";
-}
+};
 
 export type RuleConditions = {
     ref_name?: {
         include?: string[];
         exclude?: string[];
     };
-}
+};
 
 export type SimpleRuleRule = {
     type: "creation" | "deletion" | "required_linear_history" | "required_signatures" | "non_fast_forward";
-}
+};
 
 export type UpdateRuleRule = {
     type: "update";
     parameters: {
         update_allows_fetch_and_merge: boolean;
     }
-}
+};
 
 export type MergeQueueRuleRule = {
     type: "merge_queue";
@@ -77,14 +77,14 @@ export type MergeQueueRuleRule = {
         min_entries_to_merge: number;
         min_entries_to_merge_wait_minutes: number;
     }
-}
+};
 
 export type RequiredDeploymentsRuleRule = {
     type: "required_deployments";
     parameters: {
         required_deployment_environments: string[];
     }
-}
+};
 
 export type PullRequestRuleRule = {
     type: "pull_request";
@@ -96,7 +96,7 @@ export type PullRequestRuleRule = {
         required_approving_review_count: number;
         required_review_thread_resolution: boolean;
     }
-}
+};
 
 export type RequiredStatusChecksRuleRule = {
     type: "required_status_checks";
@@ -108,7 +108,7 @@ export type RequiredStatusChecksRuleRule = {
         }[];
         strict_required_status_checks_policy: boolean;
     }
-}
+};
 
 export type PatternRuleRule = {
     type: "commit_message_pattern" | "commit_author_email_pattern" | "committer_email_pattern" | "branch_name_pattern" | "tag_name_pattern";
@@ -118,35 +118,35 @@ export type PatternRuleRule = {
         operator: "starts_with" | "ends_with" | "contains" | "regex";
         pattern: string;
     };
-}
+};
 
 export type FilePathRestrictionRuleRule = {
     type: "file_path_restriction";
     parameters: {
         restricted_file_paths: string[];
     };
-}
+};
 
 export type FileExtensionRestrictionRuleRule = {
     type: "file_extension_restriction";
     parameters: {
         restricted_file_extensions: string[];
     };
-}
+};
 
 export type MaxFilePathLengthRuleRule = {
     type: "max_file_path_length";
     parameters: {
         max_file_path_length: number;
     };
-}
+};
 
 export type MaxFileSizeRuleRule = {
     type: "max_file_size";
     parameters: {
         max_file_size: number;
     };
-}
+};
 
 export type WorkflowsRuleRule = {
     type: "workflows";
@@ -159,7 +159,7 @@ export type WorkflowsRuleRule = {
             sha?: string;
         }[];
     };
-}
+};
 
 
 export type CodeScanningRuleRule = {
@@ -171,13 +171,13 @@ export type CodeScanningRuleRule = {
             tool: string;
         }[];
     };
-}
+};
 
 export type RepositoryActionsPermissionsRequest = {
     enabled: boolean;
     allowed_actions?: "all" | "local_only" | "selected";
-}
+};
 
 export type RepositoryActionsAccessPermissionsRequest = {
     access_level: "none" | "user" | "organization";
-}
+};

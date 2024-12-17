@@ -88,7 +88,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
 
     protected async readFile(path: string): Promise<string | undefined> {
         if (!await fs.pathExists(path)) {
-            throw new Error(`File ${path} not found`)
+            throw new Error(`File ${path} not found`);
         }
         return await fs.promises.readFile(path, 'utf8');
     }

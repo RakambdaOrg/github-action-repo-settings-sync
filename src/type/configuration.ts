@@ -2,19 +2,19 @@ import {RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsR
 
 export type Configuration = {
     elements: AllElement[];
-}
+};
 
 export type AllElement = ElementByProperty | ElementByAll;
 
 export type ElementByProperty = Element & CustomProperty & {
     searchType: "property";
     org: true
-}
+};
 
 export type ElementByAll = Element & {
     searchType: "all";
     org: boolean;
-}
+};
 
 export type Element = {
     owner: string;
@@ -32,7 +32,7 @@ export type Element = {
             value?: string;
         }[];
     }
-}
+};
 
 export type CustomProperty = {
     customPropertyName: string;
@@ -40,13 +40,13 @@ export type CustomProperty = {
      * @nullable true
      */
     customPropertyValue?: string;
-}
+};
 
 export type FilesOperation<T> = {
     branchName?: string;
     files: T[];
     committer?: { name?: string; email?: string; };
-}
+};
 
 export type File = {
     /**
@@ -54,15 +54,15 @@ export type File = {
      */
     source?: string;
     destination: string;
-}
+};
 
 export type MergeFile = {
     destination: string;
     type: "json" | "yml" | "yaml";
     conditions: MergeFileCondition[];
-}
+};
 
 export type MergeFileCondition = CustomProperty & {
     source: string;
     type: "json" | "yml" | "yaml";
-}
+};
