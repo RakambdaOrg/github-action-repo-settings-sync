@@ -6,7 +6,7 @@ import GithubWrapper from "../githubWrapper";
 import {AllElement} from "src/type/configuration";
 import fs from "fs-extra";
 
-export abstract class AbstractFilesRule<T extends { destination: string }, V extends FilesOperation<T>> implements Rule<V> {
+export abstract class AbstractFilesRule<T extends { destination: string }> implements Rule<FilesOperation<T>> {
     protected readonly github: GithubWrapper;
 
     protected constructor(github: GithubWrapper) {
@@ -15,15 +15,15 @@ export abstract class AbstractFilesRule<T extends { destination: string }, V ext
 
     public abstract getName(): string;
 
-    public abstract extractData(_: AllElement): V | undefined;
+    public abstract extractData(_: AllElement): FilesOperation<T> | undefined;
 
     public async canApply(repository: RepositoryMetadata): Promise<string | undefined> {
         return repository.defaultBranch ? undefined : "Default branch unknown";
     }
 
-    protected abstract getContent(_: V, __: T, ___: RepositoryMetadata): Promise<string | undefined>;
+    protected abstract getContent(_: T, __: RepositoryMetadata): Promise<string | undefined>;
 
-    public async apply(repository: RepositoryMetadata, data: V): Promise<void> {
+    public async apply(repository: RepositoryMetadata, data: FilesOperation<T>): Promise<void> {
         const branchName = data.branchName ?? repository.defaultBranch;
         const committerName = data.committer?.name ?? 'github-actions[bot]';
         const committerEmail = data.committer?.email ?? 'github-actions[bot]@users.noreply.github.com';
@@ -44,7 +44,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }, V ext
             core.debug(`Getting previous file SHA if exists on ${branchName}`);
             const previousFile = await this.getPreviousFileMeta(repository.owner, repository.name, file.destination, branchName && `refs/heads/${branchName}`);
 
-            const content = await this.getContent(data, file, repository);
+            const content = await this.getContent(file, repository);
             if (content === undefined) {
                 core.debug(`Deleting file`);
                 if (!previousFile) {

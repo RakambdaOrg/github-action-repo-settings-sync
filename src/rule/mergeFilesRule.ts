@@ -1,11 +1,11 @@
 import {RepositoryMetadata} from "src/type/github";
-import {AllElement, MergeFile, MergeFilesOperation} from "../type/configuration";
+import {AllElement, FilesOperation, MergeFile} from "../type/configuration";
 import GithubWrapper from "../githubWrapper";
 import lodash from "lodash";
 import {AbstractFilesRule} from "./abstractFilesRule";
 import yaml from "yaml";
 
-export class MergeFilesRule extends AbstractFilesRule<MergeFile, MergeFilesOperation<MergeFile>> {
+export class MergeFilesRule extends AbstractFilesRule<MergeFile> {
     constructor(github: GithubWrapper) {
         super(github);
     }
@@ -14,11 +14,11 @@ export class MergeFilesRule extends AbstractFilesRule<MergeFile, MergeFilesOpera
         return 'merge files sync';
     }
 
-    public extractData(element: AllElement): MergeFilesOperation<MergeFile> | undefined {
+    public extractData(element: AllElement): FilesOperation<MergeFile> | undefined {
         return element.mergeFiles;
     }
 
-    protected async getContent(origin: MergeFilesOperation<MergeFile>, data: MergeFile, repository: RepositoryMetadata): Promise<string | undefined> {
+    protected async getContent(data: MergeFile, repository: RepositoryMetadata): Promise<string | undefined> {
         const objects = [];
         for (const file of data.conditions) {
             if (!this.github.hasProperty(repository.properties, file)) {
@@ -40,7 +40,7 @@ export class MergeFilesRule extends AbstractFilesRule<MergeFile, MergeFilesOpera
             return undefined;
         }
         if (objects.length === 1) {
-            return this.transformObjectToContent(objects[0], origin.type);
+            return this.transformObjectToContent(objects[0], data.type);
         }
 
         const merged = lodash.mergeWith(objects[0], ...objects.slice(1), (objValue: any, srcValue: any) => {
@@ -49,7 +49,7 @@ export class MergeFilesRule extends AbstractFilesRule<MergeFile, MergeFilesOpera
             }
             return undefined;
         });
-        return this.transformObjectToContent(merged, origin.type);
+        return this.transformObjectToContent(merged, data.type);
     }
 
     private transformContentToObject(content: string, type: "json" | "yml" | "yaml"): any | undefined {

@@ -3,7 +3,7 @@ import {AllElement, File, FilesOperation} from "../type/configuration";
 import GithubWrapper from "../githubWrapper";
 import {AbstractFilesRule} from "./abstractFilesRule";
 
-export class FilesRule extends AbstractFilesRule<File, FilesOperation<File>> {
+export class FilesRule extends AbstractFilesRule<File> {
     constructor(github: GithubWrapper) {
         super(github);
     }
@@ -16,7 +16,7 @@ export class FilesRule extends AbstractFilesRule<File, FilesOperation<File>> {
         return element.files;
     }
 
-    protected async getContent(_: FilesOperation<File>, data: File, __: RepositoryMetadata): Promise<string | undefined> {
+    protected async getContent(data: File, __: RepositoryMetadata): Promise<string | undefined> {
         if (!data.source) {
             return undefined;
         }

@@ -18,10 +18,10 @@
     "clean": "del-cli --force ./dist",
     "lint": "eslint ./src",
     "start": "tsc --noEmit && npm run start:schema && tsx --env-file=.env ./src/index.ts",
-    "start:schema": "typescript-json-schema --esModuleInterop --strictNullChecks src/type/configuration.ts Configuration --out src/type/configuration-schema.json",
+    "start:schema": "ts-json-schema-generator --path src/type/configuration.ts Configuration --type Configuration --out src/type/configuration-schema.json",
     "build": "npm run clean && ncc build ./src/index.ts -o dist -m --no-cache && npm run build:schema",
     "build:debug": "npm run clean && ncc build ./src/index.ts --v8-cache --source-map --no-cache && npm run build:schema",
-    "build:schema": "typescript-json-schema --esModuleInterop --strictNullChecks src/type/configuration.ts Configuration --out dist/type/configuration-schema.json"
+    "build:schema": "ts-json-schema-generator --minify --path src/type/configuration.ts Configuration --type Configuration --out dist/type/configuration-schema.json"
   },
   "keywords": [
     "sync",
@@ -57,8 +57,8 @@
     "eslint": "^9.17.0",
     "globals": "^15.13.0",
     "ncc": "^0.3.6",
+    "ts-json-schema-generator": "^2.3.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
-    "typescript-json-schema": "^0.65.1"
+    "typescript": "^5.7.2"
   }
 }
