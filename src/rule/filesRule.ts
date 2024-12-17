@@ -17,6 +17,9 @@ export class FilesRule extends AbstractFilesRule<File, FilesOperation<File>> {
     }
 
     protected async getContent(_: FilesOperation<File>, data: File, __: RepositoryMetadata): Promise<string | undefined> {
+        if (!data.source) {
+            return undefined;
+        }
         return await this.readFile(data.source);
     }
 }

@@ -88,7 +88,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }, V ext
 
     protected async readFile(path: string): Promise<string | undefined> {
         if (!await fs.pathExists(path)) {
-            return undefined;
+            throw new Error(`File ${path} not found`)
         }
         return await fs.promises.readFile(path, 'utf8');
     }

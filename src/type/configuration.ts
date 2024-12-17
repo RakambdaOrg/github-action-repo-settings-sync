@@ -47,7 +47,7 @@ export type FilesOperation<T> = {
 }
 
 export type File = {
-    source: string;
+    source?: string;
     destination: string;
 }
 
