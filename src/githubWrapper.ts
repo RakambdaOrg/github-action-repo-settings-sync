@@ -98,12 +98,16 @@ export default class GithubWrapper {
     private async listAllOrgRepositories(orgName: string): Promise<RepositoryResponse[]> {
         return await this.octokit.paginate("GET /orgs/{org}/repos", {
             org: orgName,
+            sort: 'full_name',
+            per_page: 100
         });
     }
 
     private async listAllUserRepositories(user: string): Promise<RepositoryResponse[]> {
         return await this.octokit.paginate("GET /users/{user}/repos", {
             user: user,
+            sort: 'full_name',
+            per_page: 100
         });
     }
 
@@ -111,6 +115,7 @@ export default class GithubWrapper {
         return await this.octokit.paginate("GET /repos/{owner}/{repo}/properties/values", {
             owner: owner,
             repo: repo,
+            per_page: 100
         });
     }
 
@@ -126,6 +131,7 @@ export default class GithubWrapper {
         return await this.octokit.paginate("GET /repos/{owner}/{repo}/rulesets", {
             owner: owner,
             repo: repo,
+            per_page: 100
         });
     }
 
@@ -174,6 +180,7 @@ export default class GithubWrapper {
         return await this.octokit.paginate("GET /repos/{owner}/{repo}/actions/secrets", {
             owner: owner,
             repo: repo,
+            per_page: 100
         });
     }
 
@@ -208,6 +215,7 @@ export default class GithubWrapper {
         return await this.octokit.paginate("GET /repos/{owner}/{repo}/branches", {
             owner: owner,
             repo: repo,
+            per_page: 100
         });
     }
 
