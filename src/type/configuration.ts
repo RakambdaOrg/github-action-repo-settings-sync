@@ -18,41 +18,15 @@ export type ElementByAll = Element & {
 
 export type Element = {
     owner: string;
-    /**
-     * @nullable true
-     */
+    exclude?: string[];
     features?: RepositoryConfigurationRequest;
-    /**
-     * @nullable true
-     */
     rulesets?: RepositoryRulesetRequest[];
-    /**
-     * @nullable true
-     */
     deleteRulesets?: string[];
-    /**
-     * @nullable true
-     */
     files?: FilesOperation<File>;
-    /**
-     * @nullable true
-     */
     mergeFiles?: FilesOperation<MergeFile>;
-    /**
-     * @nullable true
-     */
     actions?: {
-        /**
-         * @nullable true
-         */
         permissions?: RepositoryActionsPermissionsRequest;
-        /**
-         * @nullable true
-         */
         accessPermissions?: RepositoryActionsAccessPermissionsRequest;
-        /**
-         * @nullable true
-         */
         secrets?: {
             name: string;
             value?: string;
@@ -69,14 +43,8 @@ export type CustomProperty = {
 }
 
 export type FilesOperation<T> = {
-    /**
-     * @nullable true
-     */
     branchName?: string;
     files: T[];
-    /**
-     * @nullable true
-     */
     committer?: { name?: string; email?: string; };
 }
 
