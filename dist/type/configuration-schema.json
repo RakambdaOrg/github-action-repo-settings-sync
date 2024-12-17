@@ -84,8 +84,11 @@
                 "features": {
                     "$ref": "#/definitions/RepositoryConfigurationRequest"
                 },
-                "file": {
-                    "$ref": "#/definitions/FilesOperation"
+                "files": {
+                    "$ref": "#/definitions/FilesOperation<File>"
+                },
+                "mergeFiles": {
+                    "$ref": "#/definitions/MergeFilesOperation<MergeFile>"
                 },
                 "org": {
                     "type": "boolean"
@@ -184,8 +187,11 @@
                 "features": {
                     "$ref": "#/definitions/RepositoryConfigurationRequest"
                 },
-                "file": {
-                    "$ref": "#/definitions/FilesOperation"
+                "files": {
+                    "$ref": "#/definitions/FilesOperation<File>"
+                },
+                "mergeFiles": {
+                    "$ref": "#/definitions/MergeFilesOperation<MergeFile>"
                 },
                 "org": {
                     "const": true,
@@ -294,7 +300,7 @@
             },
             "type": "object"
         },
-        "FilesOperation": {
+        "FilesOperation<File>": {
             "properties": {
                 "branchName": {
                     "type": "string"
@@ -313,6 +319,31 @@
                 "files": {
                     "items": {
                         "$ref": "#/definitions/File"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "FilesOperation<MergeFile>": {
+            "properties": {
+                "branchName": {
+                    "type": "string"
+                },
+                "committer": {
+                    "properties": {
+                        "email": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "files": {
+                    "items": {
+                        "$ref": "#/definitions/MergeFile"
                     },
                     "type": "array"
                 }
@@ -352,6 +383,62 @@
                 }
             },
             "type": "object"
+        },
+        "MergeFile": {
+            "properties": {
+                "conditions": {
+                    "items": {
+                        "$ref": "#/definitions/MergeFileCondition"
+                    },
+                    "type": "array"
+                },
+                "destination": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MergeFileCondition": {
+            "properties": {
+                "customPropertyName": {
+                    "type": "string"
+                },
+                "customPropertyValue": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "json",
+                        "yaml",
+                        "yml"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MergeFilesOperation<MergeFile>": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/FilesOperation<MergeFile>"
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "enum": [
+                                "json",
+                                "yaml",
+                                "yml"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            ]
         },
         "PatternRuleRule": {
             "properties": {

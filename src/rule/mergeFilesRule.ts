@@ -1,114 +1,79 @@
 import {RepositoryMetadata} from "src/type/github";
-import {Rule} from "../rule";
-import {FilesOperation, MergeFile} from "../type/configuration";
-import * as core from "@actions/core";
+import {AllElement, MergeFile, MergeFilesOperation} from "../type/configuration";
 import GithubWrapper from "../githubWrapper";
-import {AllElement} from "src/type/configuration";
-import fs from "fs-extra";
 import lodash from "lodash";
+import {AbstractFilesRule} from "./abstractFilesRule";
+import yaml from "yaml";
 
-export class MergeFilesRule implements Rule<FilesOperation> {
-    private readonly github: GithubWrapper;
-
+export class MergeFilesRule extends AbstractFilesRule<MergeFile, MergeFilesOperation<MergeFile>> {
     constructor(github: GithubWrapper) {
-        this.github = github;
+        super(github);
     }
 
     public getName(): string {
         return 'merge files sync';
     }
 
-    public extractData(element: AllElement): FilesOperation | undefined {
-        return element.file;
+    public extractData(element: AllElement): MergeFilesOperation<MergeFile> | undefined {
+        return element.mergeFiles;
     }
 
-    public async canApply(repository: RepositoryMetadata): Promise<string | undefined> {
-        return repository.defaultBranch ? undefined : "Default branch unknown";
-    }
-
-    public async apply(repository: RepositoryMetadata, data: FilesOperation): Promise<void> {
-        const branchName = data.branchName ?? repository.defaultBranch;
-        const committerName = data.committer?.name ?? 'github-actions[bot]';
-        const committerEmail = data.committer?.email ?? 'github-actions[bot]@users.noreply.github.com';
-        const selfRepo = process.env['GITHUB_REPOSITORY'] ?? '<unknown>';
-        const runId = process.env['GITHUB_RUN_ID'] ?? '<unknown>';
-        const runNumber = process.env['GITHUB_RUN_NUMBER'] ?? '0';
-
-        const currentBranches = await this.github.listRepositoryBranches(repository.owner, repository.name);
-
-        const branchExists = currentBranches.find(b => b.name === branchName);
-        if (!branchExists) {
-            core.error(`Branch ${branchName} does not exist`);
-            return;
-        }
-        for (const file of data.mergeFiles) {
-            core.info(`Handling merge file with destination '${file.destination}' on branch '${branchName}'`);
-
-            core.debug(`Getting previous file SHA if exists on ${branchName}`);
-            const previousFile = await this.getPreviousFileMeta(repository.owner, repository.name, file.destination, branchName && `refs/heads/${branchName}`);
-
-            const content = await this.mergeFiles(file, repository.properties);
-            if (content === false) {
-                core.debug(`Deleting file`);
-                if (!previousFile) {
-                    core.debug(`File does not exist on remote`);
-                    continue;
-                }
-                const commitMessage = `Removing file ${file.destination} from ${selfRepo} (run ${runId} | #${runNumber})`;
-                const result = await this.github.deleteFile(repository.owner, repository.name, file.destination, commitMessage, previousFile.sha, branchName, {name: committerName, email: committerEmail});
-                core.info(`Deleted file in commit ${result.commit.sha}`);
-            } else {
-                core.debug(`Editing file`);
-                if (content === previousFile?.content) {
-                    core.debug(`File is the same`);
-                    continue;
-                }
-                const commitMessage = `Synchronizing file ${file.destination} from ${selfRepo} (run ${runId} | #${runNumber})`;
-                const result = await this.github.editFile(repository.owner, repository.name, file.destination, commitMessage, content, previousFile?.sha, branchName, {name: committerName, email: committerEmail});
-                core.info(`Edited file in commit ${result.commit.sha}`);
-            }
-        }
-    }
-
-    private async mergeFiles(file: MergeFile, properties: { property_name: string, value: string | string[] | null }[]): Promise<string | false> {
+    protected async getContent(origin: MergeFilesOperation<MergeFile>, data: MergeFile, repository: RepositoryMetadata): Promise<string | undefined> {
         const objects = [];
-        for (const f of file.conditions) {
-            if (!this.github.hasProperty(properties, f.customPropertyName, f.customPropertyValue)) {
+        for (const file of data.conditions) {
+            if (!this.github.hasProperty(repository.properties, file.customPropertyName, file.customPropertyValue)) {
                 continue;
             }
 
-            const content = await this.readFile(f.source);
-            if (content) {
-                objects.push(JSON.parse(content));
+            const content = await this.readFile(file.source);
+            if (!content) {
+                continue;
+            }
+
+            const obj = this.transformContentToObject(content, file.type);
+            if (obj !== undefined) {
+                objects.push(obj);
             }
         }
-        const merged = lodash.merge(objects[0], ...objects.slice(1));
-        return JSON.stringify(merged);
-    }
 
-    private async readFile(path: string): Promise<string | false> {
-        if (!await fs.pathExists(path)) {
-            return false;
+        if (objects.length === 0) {
+            return undefined;
         }
-        return await fs.promises.readFile(path, 'utf8');
+        if (objects.length === 1) {
+            return this.transformObjectToContent(objects[0], origin.type);
+        }
+
+        const merged = lodash.mergeWith(objects[0], ...objects.slice(1), (objValue: any, srcValue: any) => {
+            if (objValue && objValue.constructor === Array) {
+                return objValue.concat(srcValue);
+            }
+            return undefined;
+        });
+        return this.transformObjectToContent(merged, origin.type);
     }
 
-    private async getPreviousFileMeta(owner: string, repo: string, path: string, ref?: string): Promise<{ type: string; sha: string; content?: string; } | undefined> {
-        let result;
-        try {
-            result = await this.github.getFileMeta(owner, repo, path, ref);
-        } catch (e: any) {
-            if (e && 'status' in e && e.status === 404) {
+    private transformContentToObject(content: string, type: "json" | "yml" | "yaml"): any | undefined {
+        switch (type) {
+            case "json":
+                return JSON.parse(content);
+            case "yaml":
+            case "yml":
+                return yaml.parse(content);
+            default:
                 return undefined;
-            }
-            throw e;
+        }
+    }
+
+    private transformObjectToContent(data: any, type: "json" | "yml" | "yaml") {
+        switch (type) {
+            case "json":
+                return JSON.stringify(data, null, 4);
+            case "yaml":
+            case "yml":
+                return yaml.stringify(data);
+            default:
+                return undefined;
         }
 
-        const resultObj = result as { type: "dir" | "file" | "submodule" | "symlink", sha: string };
-        if (resultObj.type !== 'file') {
-            throw new Error(`Found element of type ${resultObj.type}`);
-        }
-
-        return resultObj;
     }
 }
