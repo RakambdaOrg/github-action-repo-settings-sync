@@ -29,7 +29,7 @@ export interface ElementByProperty extends Element {
     searchType: "property";
     org: true
     customPropertyName: string;
-    customPropertyValue: string;
+    customPropertyValue?: string;
 }
 
 export interface ElementByAll extends Element {

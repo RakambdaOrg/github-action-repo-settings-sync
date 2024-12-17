@@ -74,6 +74,5 @@ export class MergeFilesRule extends AbstractFilesRule<MergeFile, MergeFilesOpera
             default:
                 return undefined;
         }
-
     }
 }

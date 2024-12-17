@@ -271,7 +271,13 @@ export default class GithubWrapper {
         return Buffer.from(content, 'base64').toString();
     }
 
-    public hasProperty(properties: { property_name: string, value: string | string[] | null }[], property_name: string, value: string): boolean {
+    public hasProperty(properties: { property_name: string, value: string | string[] | null }[], property_name: string, value?: string): boolean {
+        if (value === undefined || value === null) {
+            if (!properties.some(p => p.property_name === property_name)) {
+                return true;
+            }
+        }
+
         return properties.some(prop => {
             if (prop.property_name !== property_name) {
                 return false;
