@@ -11,7 +11,8 @@ export interface Element {
     features?: RepositoryConfigurationRequest;
     rulesets?: RepositoryRulesetRequest[];
     deleteRulesets?: string[];
-    file?: FilesOperation;
+    files?: FilesOperation<File>;
+    mergeFiles: MergeFilesOperation<MergeFile>;
     actions?: {
         permissions?: RepositoryActionsPermissionsRequest;
         accessPermissions?: RepositoryActionsAccessPermissionsRequest;
@@ -21,6 +22,8 @@ export interface Element {
         }[];
     }
 }
+
+export type  MergeFilesOperation<T> = FilesOperation<T> & { type: "json" | "yml" | "yaml" };
 
 export interface ElementByProperty extends Element {
     searchType: "property";
@@ -34,13 +37,25 @@ export interface ElementByAll extends Element {
     org: boolean;
 }
 
-export interface FilesOperation {
+export interface FilesOperation<T> {
     branchName?: string;
-    files: File[];
+    files: T[];
     committer?: { name?: string; email?: string; };
 }
 
 export interface File {
     source: string;
     destination: string;
+}
+
+export interface MergeFile {
+    destination: string;
+    conditions: MergeFileCondition[];
+}
+
+export interface MergeFileCondition {
+    source: string;
+    type: "json" | "yml" | "yaml";
+    customPropertyName: string;
+    customPropertyValue: string;
 }

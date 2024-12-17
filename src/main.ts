@@ -15,6 +15,7 @@ import {RulesetsRule} from "./rule/rulesetsRule";
 import {RulesetsDeletionRule} from "./rule/rulesetsDeletionRule";
 import {ActionSecrets} from "./rule/actionSecrets";
 import {FilesRule} from "./rule/filesRule";
+import {MergeFilesRule} from "./rule/mergeFilesRule";
 
 export class Main {
     private readonly github: GithubWrapper;
@@ -38,6 +39,7 @@ export class Main {
             new ActionPermissionsAccessRule(this.github),
             new ActionSecrets(this.github),
             new FilesRule(this.github),
+            new MergeFilesRule(this.github),
         ];
     }
 
@@ -76,7 +78,7 @@ export class Main {
     private async listRepositories(element: AllElement): Promise<RepositoryMetadata[]> {
         let data: RepositoryMetadata[] = await this.github.listRepositories(element.owner, element.org);
         if (element.searchType === "property") {
-            data = data.filter((r) => r.properties.some(p => p.property_name === element.customPropertyName && p.value === element.customPropertyValue));
+            data = data.filter((r) => this.github.hasProperty(r.properties, element.customPropertyName, element.customPropertyValue));
         }
         return data.filter(repo => !(repo.archived ?? true));
     }

@@ -270,4 +270,20 @@ export default class GithubWrapper {
     private decodeBase64(content: string): string {
         return Buffer.from(content, 'base64').toString();
     }
+
+    public hasProperty(properties: { property_name: string, value: string | string[] | null }[], property_name: string, value: string): boolean {
+        return properties.some(prop => {
+            if (prop.property_name !== property_name) {
+                return false;
+            }
+            if (prop.value === null) {
+                return value === null;
+            }
+            if (prop.value.constructor === Array) {
+                const arrayValue = prop.value as string[];
+                return arrayValue.some(v => v === value);
+            }
+            return prop.value === value;
+        });
+    }
 }
