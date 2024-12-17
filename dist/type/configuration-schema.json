@@ -84,6 +84,9 @@
                 "features": {
                     "$ref": "#/definitions/RepositoryConfigurationRequest"
                 },
+                "file": {
+                    "$ref": "#/definitions/FilesOperation"
+                },
                 "org": {
                     "type": "boolean"
                 },
@@ -181,6 +184,9 @@
                 "features": {
                     "$ref": "#/definitions/RepositoryConfigurationRequest"
                 },
+                "file": {
+                    "$ref": "#/definitions/FilesOperation"
+                },
                 "org": {
                     "const": true,
                     "type": "boolean"
@@ -237,6 +243,17 @@
             },
             "type": "object"
         },
+        "File": {
+            "properties": {
+                "destination": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
         "FileExtensionRestrictionRuleRule": {
             "properties": {
                 "parameters": {
@@ -273,6 +290,31 @@
                 "type": {
                     "const": "file_path_restriction",
                     "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "FilesOperation": {
+            "properties": {
+                "branchName": {
+                    "type": "string"
+                },
+                "committer": {
+                    "properties": {
+                        "email": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "files": {
+                    "items": {
+                        "$ref": "#/definitions/File"
+                    },
+                    "type": "array"
                 }
             },
             "type": "object"
