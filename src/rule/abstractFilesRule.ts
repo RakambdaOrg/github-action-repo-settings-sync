@@ -15,7 +15,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }, V ext
 
     public abstract getName(): string;
 
-    public abstract extractData(element: AllElement): V | undefined;
+    public abstract extractData(_: AllElement): V | undefined;
 
     public async canApply(repository: RepositoryMetadata): Promise<string | undefined> {
         return repository.defaultBranch ? undefined : "Default branch unknown";
