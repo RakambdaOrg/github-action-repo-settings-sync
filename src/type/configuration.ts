@@ -4,7 +4,7 @@ export type Configuration = {
     elements: AllElement[];
 }
 
-export type AllElement = ElementByProperty;
+export type AllElement = ElementByProperty | ElementByAll;
 
 export type ElementByProperty = Element & CustomProperty & {
     searchType: "property";
