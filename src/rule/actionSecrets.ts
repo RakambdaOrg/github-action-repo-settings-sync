@@ -26,7 +26,7 @@ export class ActionSecrets implements Rule<Data[]> {
     }
 
     public async apply(repository: RepositoryMetadata, data: Data[]): Promise<void> {
-        core.debug("Getting repository public key")
+        core.debug("Getting repository public key");
         const key = await this.github.getRepositoryPublicKey(repository.owner, repository.name);
         const currentSecrets = await this.github.listRepositoryActionSecret(repository.owner, repository.name);
 
@@ -37,14 +37,14 @@ export class ActionSecrets implements Rule<Data[]> {
             if (secret.value === undefined || secret.value === null) {
                 if (previousSecret) {
                     core.debug(`Secret '${secret.name}' will be deleted`);
-                    let result = await this.github.deleteActionSecret(repository.owner, repository.name, secret.name);
+                    const result = await this.github.deleteActionSecret(repository.owner, repository.name, secret.name);
                     core.debug(`Secret deletion response is ${JSON.stringify(result)}`);
                 } else {
                     core.debug("Secret does not exists");
                 }
             } else {
                 core.debug(`Secret '${secret.name}' will be created/edited`);
-                let result = await this.github.editActionSecret(repository.owner, repository.name, key.key_id, key.key, secret.name, secret.value);
+                const result = await this.github.editActionSecret(repository.owner, repository.name, key.key_id, key.key, secret.name, secret.value);
                 core.debug(`Secret edition response is ${JSON.stringify(result)}`);
             }
         }

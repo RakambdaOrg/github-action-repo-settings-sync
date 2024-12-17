@@ -4,9 +4,9 @@ import {AllElement} from "./type/configuration";
 export interface Rule<T> {
     getName(): string;
 
-    extractData(element: AllElement): T | undefined;
+    extractData(_: AllElement): T | undefined;
 
-    canApply(repository: RepositoryMetadata): Promise<string | undefined>;
+    canApply(_: RepositoryMetadata): Promise<string | undefined>;
 
-    apply(repository: RepositoryMetadata, data: T): Promise<void>;
+    apply(_: RepositoryMetadata, __: T): Promise<void>;
 }

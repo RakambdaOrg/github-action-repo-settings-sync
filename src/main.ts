@@ -96,7 +96,7 @@ export class Main {
 
             const canApply = await rule.canApply(repository);
             if (canApply !== undefined) {
-                core.warning(`Cannot apply ${type} on repository ${repository.fullName} : ${canApply}`)
+                core.warning(`Cannot apply ${type} on repository ${repository.fullName} : ${canApply}`);
                 return;
             }
 
