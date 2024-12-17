@@ -1,83 +1,20 @@
 name: 'Repo Settings Sync'
 description: 'Github Action to setup repository settings'
-author: 'rakambda'
+author: 'Rakambda'
+
 branding:
   icon: 'upload-cloud'
   color: 'purple'
+
 inputs:
-  REPOSITORIES:
-    description: 'Github repositories to setup. Default will get all public repositories for your username'
+  github_token:
+    description: 'Github token used to access the APIs'
+    required: true
+  config_path:
+    description: 'Configuration file'
     required: false
-    default: 'ALL'
-  ALLOW_ISSUES:
-    description: 'Whether or not to allow issues on the repo'
-    required: false
-    default: 'true'
-  ALLOW_PROJECTS:
-    description: 'Whether or not to allow projects on the repo'
-    required: false
-    default: 'true'
-  ALLOW_WIKI:
-    description: 'Whether or not to allow wiki on the repo'
-    required: false
-    default: 'true'
-  IS_TEMPLATE:
-    description: 'Whether or not the repository is a template'
-    required: false
-    default: 'false'
-  SQUASH_MERGE:
-    description: 'Whether or not to allow squash merges on the repo'
-    required: false
-    default: 'true'
-  MERGE_COMMIT:
-    description: 'Whether or not to allow merge commits on the repo'
-    required: false
-    default: 'true'
-  REBASE_MERGE:
-    description: 'Whether or not to allow rebase merges on the repo'
-    required: false
-    default: 'true'
-  AUTO_MERGE:
-    description: 'Whether or not to allow auto-merge on the repo'
-    required: false
-    default: 'false'
-  ALLOW_UPDATE_BRANCH:
-    description: 'Whether or not to allow update branch on PRs even if not required'
-    required: false
-    default: 'false'
-  DELETE_HEAD:
-    description: 'Whether or not to delete head branch after merges'
-    required: false
-    default: 'false'
-  SQUASH_PR_TITLE:
-    description: 'Squash PR title'
-    required: false
-    default: 'COMMIT_OR_PR_TITLE'
-  SQUASH_PR_MESSAGE:
-    description: 'Squash PR message'
-    required: false
-    default: 'COMMIT_MESSAGES'
-  RULESET_DEFINITIONS:
-    description: 'Paths to a file containing ruleset to apply'
-    required: false
-    default: ''
-  ACTION_ACCESS_LEVEL:
-    description: 'Action access level'
-    required: false
-    default: 'none'
-  ACTION_ENABLED_REPOSITORIES:
-    description: 'Control repository allowance to run actions'
-    required: false
-    default: 'false'
-  ACTION_ALLOWED_ACTIONS:
-    description: 'Permission policy to run actions and reusable workflows'
-    required: false
-    default: 'all'
-  ACTION_SECRETS:
-    description: 'Action secrets to deploy on every repo'
-    required: false
-    default: ''
+    default: '.github/settings-sync.yml'
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'node20'
+  main: 'dist/index.js'

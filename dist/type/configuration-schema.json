@@ -1,0 +1,668 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "AllElement": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/ElementByAll"
+                },
+                {
+                    "$ref": "#/definitions/ElementByProperty"
+                }
+            ]
+        },
+        "AnyRuleRule": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/SimpleRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/UpdateRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/WorkflowsRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/MaxFileSizeRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/RequiredDeploymentsRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/FileExtensionRestrictionRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/PullRequestRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/MaxFilePathLengthRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/RequiredStatusChecksRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/PatternRuleRule"
+                },
+                {
+                    "$ref": "#/definitions/FilePathRestrictionRuleRule"
+                }
+            ]
+        },
+        "ElementByAll": {
+            "properties": {
+                "actions": {
+                    "properties": {
+                        "accessPermissions": {
+                            "$ref": "#/definitions/RepositoryActionsAccessPermissionsRequest"
+                        },
+                        "permissions": {
+                            "$ref": "#/definitions/RepositoryActionsPermissionsRequest"
+                        },
+                        "secrets": {
+                            "items": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "deleteRulesets": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "features": {
+                    "$ref": "#/definitions/RepositoryConfigurationRequest"
+                },
+                "org": {
+                    "type": "boolean"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "rulesets": {
+                    "items": {
+                        "properties": {
+                            "bypass_actors": {
+                                "items": {
+                                    "$ref": "#/definitions/RuleActor"
+                                },
+                                "type": "array"
+                            },
+                            "conditions": {
+                                "$ref": "#/definitions/RuleConditions"
+                            },
+                            "enforcement": {
+                                "enum": [
+                                    "active",
+                                    "disabled",
+                                    "evaluate"
+                                ],
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "rules": {
+                                "items": {
+                                    "$ref": "#/definitions/AnyRuleRule"
+                                },
+                                "type": "array"
+                            },
+                            "target": {
+                                "enum": [
+                                    "branch",
+                                    "push",
+                                    "tag"
+                                ],
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "searchType": {
+                    "const": "all",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ElementByProperty": {
+            "properties": {
+                "actions": {
+                    "properties": {
+                        "accessPermissions": {
+                            "$ref": "#/definitions/RepositoryActionsAccessPermissionsRequest"
+                        },
+                        "permissions": {
+                            "$ref": "#/definitions/RepositoryActionsPermissionsRequest"
+                        },
+                        "secrets": {
+                            "items": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "customPropertyName": {
+                    "type": "string"
+                },
+                "customPropertyValue": {
+                    "type": "string"
+                },
+                "deleteRulesets": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "features": {
+                    "$ref": "#/definitions/RepositoryConfigurationRequest"
+                },
+                "org": {
+                    "const": true,
+                    "type": "boolean"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "rulesets": {
+                    "items": {
+                        "properties": {
+                            "bypass_actors": {
+                                "items": {
+                                    "$ref": "#/definitions/RuleActor"
+                                },
+                                "type": "array"
+                            },
+                            "conditions": {
+                                "$ref": "#/definitions/RuleConditions"
+                            },
+                            "enforcement": {
+                                "enum": [
+                                    "active",
+                                    "disabled",
+                                    "evaluate"
+                                ],
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "rules": {
+                                "items": {
+                                    "$ref": "#/definitions/AnyRuleRule"
+                                },
+                                "type": "array"
+                            },
+                            "target": {
+                                "enum": [
+                                    "branch",
+                                    "push",
+                                    "tag"
+                                ],
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "searchType": {
+                    "const": "property",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "FileExtensionRestrictionRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "restricted_file_extensions": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "file_extension_restriction",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "FilePathRestrictionRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "restricted_file_paths": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "file_path_restriction",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MaxFilePathLengthRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "max_file_path_length": {
+                            "type": "number"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "max_file_path_length",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MaxFileSizeRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "max_file_size": {
+                            "type": "number"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "max_file_size",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "PatternRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "negate": {
+                            "type": "boolean"
+                        },
+                        "operator": {
+                            "enum": [
+                                "contains",
+                                "ends_with",
+                                "regex",
+                                "starts_with"
+                            ],
+                            "type": "string"
+                        },
+                        "pattern": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "enum": [
+                        "branch_name_pattern",
+                        "commit_author_email_pattern",
+                        "commit_message_pattern",
+                        "committer_email_pattern",
+                        "tag_name_pattern"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "PullRequestRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "allowed_merge_methods": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "dismiss_stale_reviews_on_push": {
+                            "type": "boolean"
+                        },
+                        "require_code_owner_review": {
+                            "type": "boolean"
+                        },
+                        "require_last_push_approval": {
+                            "type": "boolean"
+                        },
+                        "required_approving_review_count": {
+                            "type": "number"
+                        },
+                        "required_review_thread_resolution": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "pull_request",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "RepositoryActionsAccessPermissionsRequest": {
+            "properties": {
+                "access_level": {
+                    "enum": [
+                        "none",
+                        "organization",
+                        "user"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "RepositoryActionsPermissionsRequest": {
+            "properties": {
+                "allowed_actions": {
+                    "enum": [
+                        "all",
+                        "local_only",
+                        "selected"
+                    ],
+                    "type": "string"
+                },
+                "enabled": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "RepositoryConfigurationRequest": {
+            "properties": {
+                "allow_auto_merge": {
+                    "type": "boolean"
+                },
+                "allow_merge_commit": {
+                    "type": "boolean"
+                },
+                "allow_rebase_merge": {
+                    "type": "boolean"
+                },
+                "allow_squash_merge": {
+                    "type": "boolean"
+                },
+                "allow_update_branch": {
+                    "type": "boolean"
+                },
+                "delete_branch_on_merge": {
+                    "type": "boolean"
+                },
+                "has_discussions": {
+                    "type": "boolean"
+                },
+                "has_issues": {
+                    "type": "boolean"
+                },
+                "has_projects": {
+                    "type": "boolean"
+                },
+                "has_wiki": {
+                    "type": "boolean"
+                },
+                "is_template": {
+                    "type": "boolean"
+                },
+                "merge_commit_message": {
+                    "enum": [
+                        "BLANK",
+                        "PR_BODY",
+                        "PR_TITLE"
+                    ],
+                    "type": "string"
+                },
+                "merge_commit_title": {
+                    "enum": [
+                        "MERGE_MESSAGE",
+                        "PR_TITLE"
+                    ],
+                    "type": "string"
+                },
+                "squash_merge_commit_message": {
+                    "enum": [
+                        "BLANK",
+                        "COMMIT_MESSAGES",
+                        "PR_BODY"
+                    ],
+                    "type": "string"
+                },
+                "squash_merge_commit_title": {
+                    "enum": [
+                        "COMMIT_OR_PR_TITLE",
+                        "PR_TITLE"
+                    ],
+                    "type": "string"
+                },
+                "use_squash_pr_title_as_default": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "RequiredDeploymentsRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "required_deployment_environments": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "required_deployments",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "RequiredStatusChecksRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "do_not_enforce_on_create": {
+                            "type": "boolean"
+                        },
+                        "required_status_checks": {
+                            "items": {
+                                "properties": {
+                                    "context": {
+                                        "type": "string"
+                                    },
+                                    "integration_id": {
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "type": "array"
+                        },
+                        "strict_required_status_checks_policy": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "required_status_checks",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "RuleActor": {
+            "properties": {
+                "actor_id": {
+                    "type": "number"
+                },
+                "actor_type": {
+                    "enum": [
+                        "DeployKey",
+                        "Integration",
+                        "OrganizationAdmin",
+                        "RepositoryRole",
+                        "Team"
+                    ],
+                    "type": "string"
+                },
+                "bypass_mode": {
+                    "enum": [
+                        "always",
+                        "pull_request"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "RuleConditions": {
+            "properties": {
+                "ref_name": {
+                    "properties": {
+                        "exclude": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "include": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "SimpleRuleRule": {
+            "properties": {
+                "type": {
+                    "enum": [
+                        "creation",
+                        "deletion",
+                        "non_fast_forward",
+                        "required_linear_history",
+                        "required_signatures"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "UpdateRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "update_allows_fetch_and_merge": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "update",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "WorkflowsRuleRule": {
+            "properties": {
+                "parameters": {
+                    "properties": {
+                        "do_not_enforce_on_create": {
+                            "type": "boolean"
+                        },
+                        "workflows": {
+                            "items": {
+                                "properties": {
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "ref": {
+                                        "type": "string"
+                                    },
+                                    "repository_id": {
+                                        "type": "number"
+                                    },
+                                    "sha": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "const": "workflows",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "elements": {
+            "items": {
+                "$ref": "#/definitions/AllElement"
+            },
+            "type": "array"
+        }
+    },
+    "type": "object"
+}
+
