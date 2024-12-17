@@ -230,7 +230,7 @@ export default class GithubWrapper {
         };
     }
 
-    public async editFile(owner: string, repo: string, path: string, message: string, content: string, sha?: string, branch?: string, committer?: { name: string, email: string }): Promise<{ commit: { sha?: string } }> {
+    public async editFile(owner: string, repo: string, path: string, message: string, content: string, sha?: string, branch?: string, committer?: { name: string, email: string }): Promise<{ commit: { sha?: string; html_url?: string; } }> {
         const encodedContent = this.encodeBase64(content);
 
         return (await this.octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
@@ -245,7 +245,7 @@ export default class GithubWrapper {
         })).data;
     }
 
-    public async deleteFile(owner: string, repo: string, path: string, message: string, sha: string, branch?: string, committer?: { name: string, email: string }): Promise<{ commit: { sha?: string } }> {
+    public async deleteFile(owner: string, repo: string, path: string, message: string, sha: string, branch?: string, committer?: { name: string, email: string }): Promise<{ commit: { sha?: string; html_url?: string; } }> {
         return (await this.octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
             owner: owner,
             repo: repo,

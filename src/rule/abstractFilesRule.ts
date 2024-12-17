@@ -53,7 +53,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }, V ext
                 }
                 const commitMessage = `Removing file ${file.destination} from ${selfRepo} (run ${runId} | #${runNumber})`;
                 const result = await this.github.deleteFile(repository.owner, repository.name, file.destination, commitMessage, previousFile.sha, branchName, {name: committerName, email: committerEmail});
-                core.info(`Deleted file in commit ${result.commit.sha}`);
+                core.info(`Deleted file in commit ${result.commit.sha} : ${result.commit.html_url}`);
             } else {
                 core.debug(`Editing file`);
                 if (content === previousFile?.content) {
@@ -62,7 +62,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }, V ext
                 }
                 const commitMessage = `Synchronizing file ${file.destination} from ${selfRepo} (run ${runId} | #${runNumber})`;
                 const result = await this.github.editFile(repository.owner, repository.name, file.destination, commitMessage, content, previousFile?.sha, branchName, {name: committerName, email: committerEmail});
-                core.info(`Edited file in commit ${result.commit.sha}`);
+                core.info(`Edited file in commit ${result.commit.sha} : ${result.commit.html_url}`);
             }
         }
     }

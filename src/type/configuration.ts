@@ -4,7 +4,7 @@ export type Configuration = {
     elements: AllElement[];
 }
 
-export type AllElement = ElementByAll | ElementByProperty;
+export type AllElement = ElementByProperty;
 
 export type ElementByProperty = Element & CustomProperty & {
     searchType: "property";
@@ -37,7 +37,7 @@ export type  MergeFilesOperation<T> = FilesOperation<T> & { type: "json" | "yml"
 
 export type CustomProperty = {
     customPropertyName: string;
-    customPropertyValue?: string;
+    customPropertyValue?: string | null;
 }
 
 export type FilesOperation<T> = {
