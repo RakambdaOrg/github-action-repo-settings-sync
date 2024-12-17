@@ -1,4 +1,4 @@
-export interface RepositoryMetadata {
+export type RepositoryMetadata = {
     archived: boolean;
     fullName: string;
     name: string;
@@ -9,9 +9,10 @@ export interface RepositoryMetadata {
     properties: { property_name: string, value: string | string[] | null }[];
     visibility: string;
     defaultBranch?: string;
+    html_url: string;
 }
 
-export interface RepositoryConfigurationRequest {
+export type RepositoryConfigurationRequest = {
     has_issues?: boolean;
     has_projects?: boolean;
     has_wiki?: boolean;
@@ -39,33 +40,33 @@ export type RepositoryRulesetRequest = {
     rules?: AnyRuleRule[];
 };
 
-type AnyRuleRule = SimpleRuleRule | UpdateRuleRule | WorkflowsRuleRule | MaxFileSizeRuleRule | RequiredDeploymentsRuleRule | FileExtensionRestrictionRuleRule | PullRequestRuleRule | MaxFilePathLengthRuleRule | RequiredStatusChecksRuleRule | PatternRuleRule | FilePathRestrictionRuleRule;
+export type AnyRuleRule = SimpleRuleRule | UpdateRuleRule | WorkflowsRuleRule | MaxFileSizeRuleRule | RequiredDeploymentsRuleRule | FileExtensionRestrictionRuleRule | PullRequestRuleRule | MaxFilePathLengthRuleRule | RequiredStatusChecksRuleRule | PatternRuleRule | FilePathRestrictionRuleRule;
 
-export interface RuleActor {
+export type RuleActor = {
     actor_id?: number | null | undefined;
     actor_type: "Integration" | "OrganizationAdmin" | "RepositoryRole" | "Team" | "DeployKey";
     bypass_mode: "always" | "pull_request";
 }
 
-export interface RuleConditions {
+export type RuleConditions = {
     ref_name?: {
         include?: string[];
         exclude?: string[];
     };
 }
 
-export interface SimpleRuleRule {
+export type SimpleRuleRule = {
     type: "creation" | "deletion" | "required_linear_history" | "required_signatures" | "non_fast_forward";
 }
 
-export interface UpdateRuleRule {
+export type UpdateRuleRule = {
     type: "update";
     parameters: {
         update_allows_fetch_and_merge: boolean;
     }
 }
 
-export interface MergeQueueRuleRule {
+export type MergeQueueRuleRule = {
     type: "merge_queue";
     parameters: {
         check_response_timeout_minutes: number;
@@ -78,14 +79,14 @@ export interface MergeQueueRuleRule {
     }
 }
 
-export interface RequiredDeploymentsRuleRule {
+export type RequiredDeploymentsRuleRule = {
     type: "required_deployments";
     parameters: {
         required_deployment_environments: string[];
     }
 }
 
-export interface PullRequestRuleRule {
+export type PullRequestRuleRule = {
     type: "pull_request";
     parameters: {
         allowed_merge_methods?: string[];
@@ -97,7 +98,7 @@ export interface PullRequestRuleRule {
     }
 }
 
-export interface RequiredStatusChecksRuleRule {
+export type RequiredStatusChecksRuleRule = {
     type: "required_status_checks";
     parameters: {
         do_not_enforce_on_create?: boolean;
@@ -109,7 +110,7 @@ export interface RequiredStatusChecksRuleRule {
     }
 }
 
-export interface PatternRuleRule {
+export type PatternRuleRule = {
     type: "commit_message_pattern" | "commit_author_email_pattern" | "committer_email_pattern" | "branch_name_pattern" | "tag_name_pattern";
     parameters: {
         name?: string;
@@ -119,35 +120,35 @@ export interface PatternRuleRule {
     };
 }
 
-export interface FilePathRestrictionRuleRule {
+export type FilePathRestrictionRuleRule = {
     type: "file_path_restriction";
     parameters: {
         restricted_file_paths: string[];
     };
 }
 
-export interface FileExtensionRestrictionRuleRule {
+export type FileExtensionRestrictionRuleRule = {
     type: "file_extension_restriction";
     parameters: {
         restricted_file_extensions: string[];
     };
 }
 
-export interface MaxFilePathLengthRuleRule {
+export type MaxFilePathLengthRuleRule = {
     type: "max_file_path_length";
     parameters: {
         max_file_path_length: number;
     };
 }
 
-export interface MaxFileSizeRuleRule {
+export type MaxFileSizeRuleRule = {
     type: "max_file_size";
     parameters: {
         max_file_size: number;
     };
 }
 
-export interface WorkflowsRuleRule {
+export type WorkflowsRuleRule = {
     type: "workflows";
     parameters: {
         do_not_enforce_on_create?: boolean;
@@ -161,7 +162,7 @@ export interface WorkflowsRuleRule {
 }
 
 
-export interface CodeScanningRuleRule {
+export type CodeScanningRuleRule = {
     type: "code_scanning";
     parameters: {
         code_scanning_tools: {
@@ -172,11 +173,11 @@ export interface CodeScanningRuleRule {
     };
 }
 
-export interface RepositoryActionsPermissionsRequest {
+export type RepositoryActionsPermissionsRequest = {
     enabled: boolean;
     allowed_actions?: "all" | "local_only" | "selected";
 }
 
-export interface RepositoryActionsAccessPermissionsRequest {
+export type RepositoryActionsAccessPermissionsRequest = {
     access_level: "none" | "user" | "organization";
 }

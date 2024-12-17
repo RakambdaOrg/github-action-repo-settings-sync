@@ -4,6 +4,7 @@ import {throttling} from "@octokit/plugin-throttling";
 import {RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest} from "./type/github";
 import * as core from '@actions/core';
 import _sodium from 'libsodium-wrappers';
+import {CustomProperty} from "./type/configuration";
 
 type RepositoryResponse = {
     id: number;
@@ -17,6 +18,7 @@ type RepositoryResponse = {
     };
     visibility?: string;
     default_branch?: string;
+    html_url: string;
 };
 
 type FileContent = {
@@ -29,6 +31,7 @@ export default class GithubWrapper {
     private readonly octokit: Octokit & { paginate: PaginateInterface };
 
     constructor(token: string) {
+        // noinspection JSUnusedGlobalSymbols
         const octokitOptions = {
             auth: token,
             throttle: {
@@ -73,7 +76,8 @@ export default class GithubWrapper {
                 properties: properties,
                 visibility: repository.visibility ?? "public",
                 archived: repository.archived ?? false,
-                defaultBranch: repository.default_branch
+                defaultBranch: repository.default_branch,
+                html_url: repository.html_url
             });
         }
         return repositoriesMetadata;
@@ -271,25 +275,25 @@ export default class GithubWrapper {
         return Buffer.from(content, 'base64').toString();
     }
 
-    public hasProperty(properties: { property_name: string, value: string | string[] | null }[], property_name: string, value?: string): boolean {
-        if (value === undefined || value === null) {
-            if (!properties.some(p => p.property_name === property_name)) {
+    public hasProperty(properties: { property_name: string, value: string | string[] | null }[], property: CustomProperty): boolean {
+        if (property.customPropertyValue === undefined || property.customPropertyValue === null) {
+            if (!properties.some(p => p.property_name === property.customPropertyName)) {
                 return true;
             }
         }
 
         return properties.some(prop => {
-            if (prop.property_name !== property_name) {
+            if (prop.property_name !== property.customPropertyName) {
                 return false;
             }
             if (prop.value === null) {
-                return value === null;
+                return property.customPropertyValue === null;
             }
             if (prop.value.constructor === Array) {
                 const arrayValue = prop.value as string[];
-                return arrayValue.some(v => v === value);
+                return arrayValue.some(v => v === property.customPropertyValue);
             }
-            return prop.value === value;
+            return prop.value === property.customPropertyValue;
         });
     }
 }

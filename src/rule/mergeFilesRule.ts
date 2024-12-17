@@ -21,7 +21,7 @@ export class MergeFilesRule extends AbstractFilesRule<MergeFile, MergeFilesOpera
     protected async getContent(origin: MergeFilesOperation<MergeFile>, data: MergeFile, repository: RepositoryMetadata): Promise<string | undefined> {
         const objects = [];
         for (const file of data.conditions) {
-            if (!this.github.hasProperty(repository.properties, file.customPropertyName, file.customPropertyValue)) {
+            if (!this.github.hasProperty(repository.properties, file)) {
                 continue;
             }
 

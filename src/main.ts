@@ -71,19 +71,21 @@ export class Main {
         const repositories = await this.listRepositories(element);
         core.info(`Found ${repositories.length} repositories`);
         for (const repository of repositories) {
-            await core.group(`Applying configurations on ${repository.fullName} (${repository.visibility})`, async () => this.applyElement(element, repository));
+            await core.group(`Applying configurations on ${repository.fullName}`, async () => this.applyElement(element, repository));
         }
     }
 
     private async listRepositories(element: AllElement): Promise<RepositoryMetadata[]> {
         let data: RepositoryMetadata[] = await this.github.listRepositories(element.owner, element.org);
         if (element.searchType === "property") {
-            data = data.filter((r) => this.github.hasProperty(r.properties, element.customPropertyName, element.customPropertyValue));
+            data = data.filter((r) => this.github.hasProperty(r.properties, element));
         }
         return data.filter(repo => !(repo.archived ?? true));
     }
 
     private async applyElement(element: AllElement, repository: RepositoryMetadata) {
+        core.info(`Repository url : ${repository.html_url}`);
+        core.info(`Repository visibility : ${repository.visibility}`);
         for (const rule of this.rules) {
             await this.runStep(rule.getName(), repository, element, rule);
         }

@@ -1,12 +1,22 @@
 import {RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryRulesetRequest} from "./github";
 
-export interface Configuration {
+export type Configuration = {
     elements: AllElement[];
 }
 
 export type AllElement = ElementByAll | ElementByProperty;
 
-export interface Element {
+export type ElementByProperty = Element & CustomProperty & {
+    searchType: "property";
+    org: true
+}
+
+export type ElementByAll = Element & {
+    searchType: "all";
+    org: boolean;
+}
+
+export type Element = {
     owner: string;
     features?: RepositoryConfigurationRequest;
     rulesets?: RepositoryRulesetRequest[];
@@ -25,37 +35,28 @@ export interface Element {
 
 export type  MergeFilesOperation<T> = FilesOperation<T> & { type: "json" | "yml" | "yaml" };
 
-export interface ElementByProperty extends Element {
-    searchType: "property";
-    org: true
+export type CustomProperty = {
     customPropertyName: string;
     customPropertyValue?: string;
 }
 
-export interface ElementByAll extends Element {
-    searchType: "all";
-    org: boolean;
-}
-
-export interface FilesOperation<T> {
+export type FilesOperation<T> = {
     branchName?: string;
     files: T[];
     committer?: { name?: string; email?: string; };
 }
 
-export interface File {
+export type File = {
     source: string;
     destination: string;
 }
 
-export interface MergeFile {
+export type MergeFile = {
     destination: string;
     conditions: MergeFileCondition[];
 }
 
-export interface MergeFileCondition {
+export type MergeFileCondition = CustomProperty & {
     source: string;
     type: "json" | "yml" | "yaml";
-    customPropertyName: string;
-    customPropertyValue: string;
 }
