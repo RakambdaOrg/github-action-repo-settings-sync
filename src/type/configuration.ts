@@ -37,10 +37,22 @@ export interface ElementByAll extends Element {
 export interface FilesOperation {
     branchName?: string;
     files: File[];
+    mergeFiles: MergeFile[];
     committer?: { name?: string; email?: string; };
 }
 
 export interface File {
     source: string;
     destination: string;
+}
+
+export interface MergeFile {
+    destination: string;
+    conditions: MergeFileCondition[];
+}
+
+export interface MergeFileCondition {
+    source: string;
+    customPropertyName: string;
+    customPropertyValue: string;
 }
