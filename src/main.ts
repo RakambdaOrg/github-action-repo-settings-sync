@@ -23,14 +23,23 @@ export class Main {
 
     constructor() {
         const token = getInput('github_token', {
-            required: true
+            required: false
+        }) as string;
+        const appId = getInput('github_app_id', {
+            required: false
+        }) as string;
+        const appPrivateKey = getInput('github_app_private_key', {
+            required: false
+        }) as string;
+        const appInstallationId = getInput('github_app_installation_id', {
+            required: false
         }) as string;
 
-        if (!token) {
-            throw new Error("No GitHub token provided");
+        if (!token && (!appId && !appPrivateKey && !appInstallationId)) {
+            throw new Error("No GitHub token or app credentials provided");
         }
 
-        this.github = new GithubWrapper(token);
+        this.github = new GithubWrapper(token, appId, appPrivateKey, appInstallationId);
         this.rules = [
             new FeatureRule(this.github),
             new RulesetsRule(this.github),

@@ -44,10 +44,15 @@ jobs:
 
 ## Parameters
 
-| Parameter    | Required | Default                     | Description                        |
-|--------------|----------|-----------------------------|------------------------------------|
-| github_token | true     |                             | GithubWrapper token to use to access APIs |
-| config_path  | false    | ./.github/settings-sync.yml | Path to the config file to use     |
+| Parameter                  | Required | Default                     | Description                                      |
+|----------------------------|----------|-----------------------------|--------------------------------------------------|
+| github_token               | false    |                             | Github token to use to access APIs               |
+| github_app_id              | false    |                             | Github App ID to use to access APIs              |
+| github_app_private_key     | false    |                             | Github App private key to use to access APIs     |
+| github_app_installation_id | false    |                             | Github App installation ID to use to access APIs |
+| config_path                | false    | ./.github/settings-sync.yml | Path to the config file to use                   |
+
+NOTE: Use `github_token` or `github_app_id` + `github_app_private_key` + `github_app_installation_id`
 
 ## Config file
 

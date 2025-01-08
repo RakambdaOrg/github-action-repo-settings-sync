@@ -1,4 +1,5 @@
-import {Octokit} from "@octokit/core";
+import {Octokit, OctokitOptions} from "@octokit/core";
+import {createAppAuth} from "@octokit/auth-app";
 import {PaginateInterface, paginateRest} from "@octokit/plugin-paginate-rest";
 import {throttling} from "@octokit/plugin-throttling";
 import {RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest} from "./type/github";
@@ -30,10 +31,9 @@ type FileContent = {
 export default class GithubWrapper {
     private readonly octokit: Octokit & { paginate: PaginateInterface };
 
-    constructor(token: string) {
+    constructor(token?: string, appId?: string, appPrivateKey?: string, appInstallationId?: string) {
         // noinspection JSUnusedGlobalSymbols
-        const octokitOptions = {
-            auth: token,
+        let octokitOptions: OctokitOptions = {
             throttle: {
                 onRateLimit: (retryAfter: number) => {
                     core.debug(`Hit GitHub API rate limit, retrying after ${retryAfter}s`);
@@ -45,6 +45,24 @@ export default class GithubWrapper {
                 }
             }
         };
+
+        if (token) {
+            octokitOptions = {
+                auth: token,
+                ...octokitOptions
+            };
+        } else if (appId && appPrivateKey) {
+            octokitOptions = {
+                authStrategy: createAppAuth,
+                auth: {
+                    appId: appId,
+                    privateKey: appPrivateKey,
+                    installationId: appInstallationId,
+                },
+                ...octokitOptions
+            };
+        }
+
         const MyOctokit = Octokit.plugin(paginateRest, throttling);
         this.octokit = new MyOctokit(octokitOptions);
     }

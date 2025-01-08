@@ -10,6 +10,15 @@ inputs:
   github_token:
     description: 'Github token used to access the APIs'
     required: true
+  github_app_id:
+    description: 'Github App ID to use to access APIs'
+    required: false
+  github_app_private_key:
+    description: 'Github App private key to use to access APIs'
+    required: false
+  github_app_installation_id:
+    description: 'Github App installation ID to use to access APIs'
+    required: false
   config_path:
     description: 'Configuration file'
     required: false
