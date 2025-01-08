@@ -70,7 +70,7 @@ export class MergeFilesRule extends AbstractFilesRule<MergeFile> {
                 return JSON.stringify(data, null, 4);
             case "yaml":
             case "yml":
-                return yaml.stringify(data);
+                return yaml.stringify(data, {version: '1.1', singleQuote: true});
             default:
                 return undefined;
         }

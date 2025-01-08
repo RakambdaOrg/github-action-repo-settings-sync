@@ -145,6 +145,10 @@ export class Main {
     }
 
     private async getConfigurationSchema(): Promise<object> {
+        if (typeof __dirname === 'undefined') {
+            core.error("__dirname undefined, configuration won't be validated");
+            return {};
+        }
         const schemaPath = path.join(__dirname, "type", "configuration-schema.json");
         if (!await fs.pathExists(schemaPath)) {
             core.error("Failed to get configuration schema, configuration won't be validated");
