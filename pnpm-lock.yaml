@@ -21,8 +21,8 @@ importers:
         specifier: ^11.3.6
         version: 11.3.6(@octokit/core@6.1.2)
       '@octokit/plugin-throttling':
-        specifier: ^9.3.2
-        version: 9.3.2(@octokit/core@6.1.2)
+        specifier: ^9.3.3
+        version: 9.3.3(@octokit/core@6.1.2)
       action-input-parser:
         specifier: ^1.2.38
         version: 1.2.38
@@ -418,8 +418,8 @@ packages:
     peerDependencies:
       '@octokit/core': '5'
 
-  '@octokit/plugin-throttling@9.3.2':
-    resolution: {integrity: sha512-FqpvcTpIWFpMMwIeSoypoJXysSAQ3R+ALJhXXSG1HTP3YZOIeLmcNcimKaXxTcws+Sh6yoRl13SJ5r8sXc1Fhw==}
+  '@octokit/plugin-throttling@9.3.3':
+    resolution: {integrity: sha512-UlBQ8T7kGzW471PUi0vi3rtXnAfp6sg5Gb13Y9YjKfjcMS1EHr4fLebqGJQo9Iw1ZHSLywg5oC0Oyu2QbNTTHw==}
     engines: {node: '>= 18'}
     peerDependencies:
       '@octokit/core': ^6.0.0
@@ -1552,7 +1552,7 @@ snapshots:
       '@octokit/core': 5.2.0
       '@octokit/types': 12.6.0
 
-  '@octokit/plugin-throttling@9.3.2(@octokit/core@6.1.2)':
+  '@octokit/plugin-throttling@9.3.3(@octokit/core@6.1.2)':
     dependencies:
       '@octokit/core': 6.1.2
       '@octokit/types': 13.6.2
