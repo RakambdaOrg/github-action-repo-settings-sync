@@ -9,7 +9,7 @@ branding:
 inputs:
   github_token:
     description: 'Github token used to access the APIs'
-    required: true
+    required: false
   github_app_id:
     description: 'Github App ID to use to access APIs'
     required: false
