@@ -42,8 +42,8 @@ importers:
         specifier: 0.3.1
         version: 0.3.1
       yaml:
-        specifier: ^2.6.1
-        version: 2.6.1
+        specifier: ^2.7.0
+        version: 2.7.0
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.2.0
@@ -1247,8 +1247,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  yaml@2.6.1:
-    resolution: {integrity: sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==}
+  yaml@2.7.0:
+    resolution: {integrity: sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -2401,6 +2401,6 @@ snapshots:
       safe-buffer: 5.0.1
       ultron: 1.1.1
 
-  yaml@2.6.1: {}
+  yaml@2.7.0: {}
 
   yocto-queue@0.1.0: {}
