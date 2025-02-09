@@ -17,6 +17,7 @@ export type ElementByAll = Element & {
 };
 
 export type Element = {
+    name?: string;
     owner: string;
     exclude?: string[];
     features?: RepositoryConfigurationRequest;

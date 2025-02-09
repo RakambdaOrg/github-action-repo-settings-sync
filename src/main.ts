@@ -69,8 +69,9 @@ export class Main {
         core.info(`Configuration read successfully, got ${configuration.elements.length} elements`);
 
         for (let i = 0; i < configuration.elements.length; i++) {
-            core.info(`Processing element ${i + 1}`);
             const element = configuration.elements[i];
+            core.info(`Processing element ${i + 1} (${element.name})`);
+            
             await this.processElement(element);
         }
     }
