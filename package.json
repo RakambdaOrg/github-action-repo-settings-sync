@@ -33,7 +33,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
-    "@octokit/auth-app": "^7.1.4",
+    "@octokit/auth-app": "^7.1.5",
     "@octokit/plugin-paginate-rest": "^11.4.2",
     "@octokit/plugin-throttling": "^9.4.0",
     "action-input-parser": "^1.2.38",
