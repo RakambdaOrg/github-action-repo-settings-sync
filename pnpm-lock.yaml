@@ -49,8 +49,8 @@ importers:
         specifier: ^3.3.0
         version: 3.3.0
       '@eslint/js':
-        specifier: ^9.20.0
-        version: 9.20.0
+        specifier: ^9.21.0
+        version: 9.21.0
       '@octokit/core':
         specifier: ^6.1.4
         version: 6.1.4
