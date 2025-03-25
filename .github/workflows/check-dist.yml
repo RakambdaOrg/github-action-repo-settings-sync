@@ -23,9 +23,9 @@ env:
 
 jobs:
   build-dist:
-    name: Build `dist` folder
+    name: Build dist folder
     runs-on: ubuntu-latest
-    if: github.event.action == 'pull_request' && contains(github.event.pull_request.title, 'Bump') && github.actor == 'dependabot'
+    if: github.event.action == 'pull_request' && contains(github.event.pull_request.title, 'Bump') && github.actor == 'dependabot[bot]'
     permissions:
       contents: write
     steps:
@@ -45,13 +45,12 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Commit dist folder
-        id: diff
         run: |
           git add dist
       - name: Commit report
         run: |
-          git config --global user.name 'Your Name'
-          git config --global user.email 'your-username@users.noreply.github.com'
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
           git commit -am "Automated report"
           git push
 
