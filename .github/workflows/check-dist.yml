@@ -55,7 +55,7 @@ jobs:
           git push
 
   check-dist:
-    name: Check `dist` folder
+    name: Check dist folder
     runs-on: ubuntu-latest
     permissions:
       contents: read
