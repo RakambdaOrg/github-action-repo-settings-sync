@@ -17,6 +17,10 @@ on:
     branches:
       - main
 
+env:
+  NODE_VERSION: 21
+  PNPM_VERSION: 9
+
 jobs:
   build-dist:
     name: Build `dist` folder
