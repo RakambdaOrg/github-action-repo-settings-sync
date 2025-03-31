@@ -22,6 +22,19 @@ env:
   PNPM_VERSION: 9
 
 jobs:
+  temp:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: display
+        env:
+          ACTION: ${{ github.event.action }}
+          TITLE: ${{ github.event.pull_request.title }}
+          ACTOR: ${{ github.actor }}
+        run: | 
+          echo "Action: ${ACTION}"
+          echo "Title: ${TITLE}"
+          echo "Actor: ${ACTOR}"
   build-dist:
     name: Build dist folder
     runs-on: ubuntu-latest
