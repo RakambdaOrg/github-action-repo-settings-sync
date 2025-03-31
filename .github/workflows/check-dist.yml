@@ -31,6 +31,8 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Setup PNPM
         uses: pnpm/action-setup@v4.1.0
         with:
