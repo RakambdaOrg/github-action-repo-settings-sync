@@ -31,10 +31,12 @@ jobs:
           ACTION: ${{ github.event.action }}
           TITLE: ${{ github.event.pull_request.title }}
           ACTOR: ${{ github.actor }}
+          EVENT_NAME: ${{ github.event_name }}
         run: | 
           echo "Action: ${ACTION}"
           echo "Title: ${TITLE}"
           echo "Actor: ${ACTOR}"
+          echo "Event name: ${EVENT_NAME}"
   build-dist:
     name: Build dist folder
     runs-on: ubuntu-latest
