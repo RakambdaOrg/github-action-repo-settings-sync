@@ -22,25 +22,10 @@ env:
   PNPM_VERSION: 9
 
 jobs:
-  temp:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: display
-        env:
-          ACTION: ${{ github.event.action }}
-          TITLE: ${{ github.event.pull_request.title }}
-          ACTOR: ${{ github.actor }}
-          EVENT_NAME: ${{ github.event_name }}
-        run: | 
-          echo "Action: ${ACTION}"
-          echo "Title: ${TITLE}"
-          echo "Actor: ${ACTOR}"
-          echo "Event name: ${EVENT_NAME}"
   build-dist:
     name: Build dist folder
     runs-on: ubuntu-latest
-    if: github.event.action == 'pull_request' && contains(github.event.pull_request.title, 'Bump') && github.actor == 'dependabot[bot]'
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'Bump') && github.actor == 'dependabot[bot]'
     permissions:
       contents: write
     steps:
