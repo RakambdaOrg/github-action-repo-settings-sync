@@ -21,18 +21,16 @@ env:
   NODE_VERSION: 21
   PNPM_VERSION: 9
 
+permissions:
+  contents: write
+
 jobs:
-  build-dist:
-    name: Build dist folder
+  check-dist:
+    name: Check dist folder
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'Bump') && github.actor == 'dependabot[bot]'
-    permissions:
-      contents: write
     steps:
       - name: Checkout source
         uses: actions/checkout@v4.2.2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
       - name: Setup PNPM
         uses: pnpm/action-setup@v4.1.0
         with:
@@ -46,40 +44,14 @@ jobs:
         run: pnpm install
       - name: Build
         run: pnpm build
-      - name: Commit dist folder
+      - name: Commit distribution
+        if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'Bump') && github.actor == 'dependabot[bot]'
         run: |
           git add dist
-      - name: Commit report
-        run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -am "Automated dist build"
           git push
-
-  check-dist:
-    name: Check dist folder
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    needs: 
-      - build-dist
-    if: always()
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4.2.2
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4.1.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - name: Setup Node.js
-        uses: actions/setup-node@v4.3.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - name: Install dependencies
-        run: pnpm install
-      - name: Build
-        run: pnpm build
       - name: Compare Directories
         id: diff
         run: |
