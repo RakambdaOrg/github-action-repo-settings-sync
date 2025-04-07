@@ -21,7 +21,7 @@
     "start:schema": "ts-json-schema-generator --path src/type/configuration.ts Configuration --type Configuration --out src/type/configuration-schema.json",
     "build": "npm run clean && ncc build ./src/index.ts -o dist -m --no-cache && npm run build:schema",
     "build:debug": "npm run clean && ncc build ./src/index.ts --v8-cache --source-map --no-cache && npm run build:schema",
-    "build:schema": "ts-json-schema-generator --minify --path src/type/configuration.ts Configuration --type Configuration --out dist/type/configuration-schema.json"
+    "build:schema": "ts-json-schema-generator --minify --path src/type/configuration.ts --type Configuration --out dist/type/configuration-schema.json"
   },
   "keywords": [
     "sync",
@@ -61,7 +61,7 @@
     "eslint": "^9.24.0",
     "globals": "^16.0.0",
     "ncc": "^0.3.6",
-    "ts-json-schema-generator": "^2.3.0",
+    "ts-json-schema-generator": "^2.4.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }
