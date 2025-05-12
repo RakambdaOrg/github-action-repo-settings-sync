@@ -40,7 +40,7 @@ export type RepositoryRulesetRequest = {
     rules?: AnyRuleRule[];
 };
 
-export type AnyRuleRule = SimpleRuleRule | UpdateRuleRule | WorkflowsRuleRule | MaxFileSizeRuleRule | RequiredDeploymentsRuleRule | FileExtensionRestrictionRuleRule | PullRequestRuleRule | MaxFilePathLengthRuleRule | RequiredStatusChecksRuleRule | PatternRuleRule | FilePathRestrictionRuleRule;
+export type AnyRuleRule = CodeScanningRuleRule | MergeQueueRuleRule| SimpleRuleRule | UpdateRuleRule | WorkflowsRuleRule | MaxFileSizeRuleRule | RequiredDeploymentsRuleRule | FileExtensionRestrictionRuleRule | PullRequestRuleRule | MaxFilePathLengthRuleRule | RequiredStatusChecksRuleRule | PatternRuleRule | FilePathRestrictionRuleRule;
 
 export type RuleActor = {
     actor_id?: number | null | undefined;
