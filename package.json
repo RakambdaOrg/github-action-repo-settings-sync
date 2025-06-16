@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.28.0",
+    "@eslint/js": "^9.29.0",
     "@octokit/core": "^7.0.2",
     "@octokit/types": "^14.1.0",
     "@stylistic/eslint-plugin-ts": "^4.4.1",
@@ -58,7 +58,7 @@
     "@typescript-eslint/parser": "^8.34.0",
     "@vercel/ncc": "^0.38.3",
     "del-cli": "^6.0.0",
-    "eslint": "^9.27.0",
+    "eslint": "^9.29.0",
     "globals": "^16.2.0",
     "ncc": "^0.3.6",
     "ts-json-schema-generator": "^2.4.0",
