@@ -30,10 +30,7 @@ export type Element = {
     actions?: {
         permissions?: RepositoryActionsPermissionsRequest;
         accessPermissions?: RepositoryActionsAccessPermissionsRequest;
-        secrets?: {
-            name: string;
-            value?: string;
-        }[];
+        secrets?: ActionSecret[];
     }
 };
 
@@ -42,6 +39,12 @@ export type Environment = {
     definition: EnvironmentRequest;
     protectionRules?: ProtectionRule[];
     branchPolicies?: BranchPolicyRequest[];
+    secrets?: ActionSecret[];
+};
+
+export type ActionSecret = {
+    name: string;
+    value?: string;
 };
 
 export type ProtectionRule = EnvironmentProtectionRuleRequest & {

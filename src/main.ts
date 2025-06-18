@@ -20,6 +20,7 @@ import {EnvironmentsRule} from "./rule/environmentsRule";
 import {EnvironmentsDeletionRule} from "./rule/environmentsDeletionRule";
 import {EnvironmentProtectionRulesRule} from "./rule/environmentProtectionRulesRule";
 import {EnvironmentBranchProtectionsRule} from "./rule/environmentBranchProtectionsRule";
+import {EnvironmentSecretsRule} from "./rule/environmentSecretsRule";
 
 export class Main {
     private readonly github: GithubWrapper;
@@ -49,6 +50,7 @@ export class Main {
             new EnvironmentsRule(this.github),
             new EnvironmentProtectionRulesRule(this.github),
             new EnvironmentBranchProtectionsRule(this.github),
+            new EnvironmentSecretsRule(this.github),
             new EnvironmentsDeletionRule(this.github),
             new RulesetsRule(this.github),
             new RulesetsDeletionRule(this.github),
@@ -79,7 +81,7 @@ export class Main {
         for (let i = 0; i < configuration.elements.length; i++) {
             const element = configuration.elements[i];
             core.info(`Processing element ${i + 1} (${element.name})`);
-            
+
             await this.processElement(element);
         }
     }

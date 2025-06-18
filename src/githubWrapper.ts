@@ -308,55 +308,86 @@ export default class GithubWrapper {
         })).data;
     }
 
-    public async listRepositoryEnvironmentProtectionRules(owner: string, repo: string, name: string): Promise<{ id: number; enabled: boolean; app: { slug: string; }; }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{name}/deployment_protection_rules", {
-            name: name,
+    public async listRepositoryEnvironmentProtectionRules(owner: string, repo: string, environment: string): Promise<{ id: number; enabled: boolean; app: { slug: string; }; }[]> {
+        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{environment}/deployment_protection_rules", {
+            environment: environment,
             owner: owner,
             repo: repo,
             per_page: 100
         });
     }
 
-    public async createRepositoryEnvironmentProtectionRule(owner: string, repo: string, name: string, parameters: EnvironmentProtectionRuleRequest): Promise<{ id: number; name: string; }> {
-        return (await this.octokit.request("POST /repos/{owner}/{repo}/environments/{name}/deployment_protection_rules", {
+    public async createRepositoryEnvironmentProtectionRule(owner: string, repo: string, environment: string, parameters: EnvironmentProtectionRuleRequest): Promise<{ id: number; name: string; }> {
+        return (await this.octokit.request("POST /repos/{owner}/{repo}/environments/{environment}/deployment_protection_rules", {
             ...parameters,
-            name: name,
+            environment: environment,
             owner: owner,
             repo: repo,
         })).data;
     }
 
-    public async deleteRepositoryEnvironmentProtectionRule(owner: string, repo: string, name: string, id: number): Promise<void> {
-        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{name}/deployment_protection_rules/{id}", {
-            name: name,
+    public async deleteRepositoryEnvironmentProtectionRule(owner: string, repo: string, environment: string, id: number): Promise<void> {
+        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{environment}/deployment_protection_rules/{id}", {
+            environment: environment,
             id: id,
             owner: owner,
             repo: repo,
         });
     }
 
-    public async listRepositoryEnvironmentBranchPolicies(owner: string, repo: string, name: string): Promise<{ id: number; name: string; }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{name}/deployment-branch-policies", {
-            name: name,
+    public async listRepositoryEnvironmentBranchPolicies(owner: string, repo: string, environment: string): Promise<{ id: number; name: string; }[]> {
+        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{environment}/deployment-branch-policies", {
+            environment: environment,
             owner: owner,
             repo: repo,
             per_page: 100
         });
     }
 
-    public async createRepositoryEnvironmentBranchPolicy(owner: string, repo: string, name: string, parameters: BranchPolicyRequest): Promise<{ id: number; name: string; }> {
-        return (await this.octokit.request("POST /repos/{owner}/{repo}/environments/{name}/deployment-branch-policies", {
+    public async createRepositoryEnvironmentBranchPolicy(owner: string, repo: string, environment: string, parameters: BranchPolicyRequest): Promise<{ id: number; name: string; }> {
+        return (await this.octokit.request("POST /repos/{owner}/{repo}/environments/{environment}/deployment-branch-policies", {
             ...parameters,
-            name: name,
+            environment: environment,
             owner: owner,
             repo: repo,
         })).data;
     }
 
-    public async deleteRepositoryEnvironmentBranchPolicy(owner: string, repo: string, name: string, id: number): Promise<void> {
-        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{name}/deployment-branch-policies/{id}", {
-            name: name,
+    public async deleteRepositoryEnvironmentBranchPolicy(owner: string, repo: string, environment: string, id: number): Promise<void> {
+        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{environment}/deployment-branch-policies/{id}", {
+            environment: environment,
             id: id,
+            owner: owner,
+            repo: repo,
+        });
+    }
+
+    public async listRepositoryEnvironmentSecret(owner: string, repo: string, environment: string): Promise<{ name: string }[]> {
+        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{environment}/secrets", {
+            environment: environment,
+            owner: owner,
+            repo: repo,
+            per_page: 100
+        });
+    }
+
+    public async deleteEnvironmentSecret(owner: string, repo: string, environment: string, name: string): Promise<void> {
+        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{environment}/secrets/{name}", {
+            environment: environment,
+            name: name,
+            owner: owner,
+            repo: repo,
+        });
+    }
+
+    public async editEnvironmentSecret(owner: string, repo: string, environment: string, keyId: string, key: string, name: string, value: string): Promise<void> {
+        const encryptedValue = await this.encryptValue(key, value);
+
+        await this.octokit.request("PUT /repos/{owner}/{repo}/environments/{environment}/secrets/{name}", {
+            encrypted_value: encryptedValue,
+            key_id: keyId,
+            environment: environment,
+            name: name,
             owner: owner,
             repo: repo,
         });
