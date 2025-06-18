@@ -2,7 +2,7 @@ import {Octokit, OctokitOptions} from "@octokit/core";
 import {createAppAuth} from "@octokit/auth-app";
 import {PaginateInterface, paginateRest} from "@octokit/plugin-paginate-rest";
 import {throttling} from "@octokit/plugin-throttling";
-import {EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest} from "./type/github";
+import {BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest} from "./type/github";
 import * as core from '@actions/core';
 import _sodium from 'libsodium-wrappers';
 import {CustomProperty} from "./type/configuration";
@@ -282,7 +282,7 @@ export default class GithubWrapper {
             committer: committer,
         })).data;
     }
-    
+
     public async listRepositoryEnvironments(owner: string, repo: string): Promise<{ id: number; name: string; }[]> {
         return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments", {
             owner: owner,
@@ -306,6 +306,60 @@ export default class GithubWrapper {
             owner: owner,
             repo: repo,
         })).data;
+    }
+
+    public async listRepositoryEnvironmentProtectionRules(owner: string, repo: string, name: string): Promise<{ id: number; enabled: boolean; app: { slug: string; }; }[]> {
+        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{name}/deployment_protection_rules", {
+            name: name,
+            owner: owner,
+            repo: repo,
+            per_page: 100
+        });
+    }
+
+    public async createRepositoryEnvironmentProtectionRule(owner: string, repo: string, name: string, parameters: EnvironmentProtectionRuleRequest): Promise<{ id: number; name: string; }> {
+        return (await this.octokit.request("POST /repos/{owner}/{repo}/environments/{name}/deployment_protection_rules", {
+            ...parameters,
+            name: name,
+            owner: owner,
+            repo: repo,
+        })).data;
+    }
+
+    public async deleteRepositoryEnvironmentProtectionRule(owner: string, repo: string, name: string, id: number): Promise<void> {
+        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{name}/deployment_protection_rules/{id}", {
+            name: name,
+            id: id,
+            owner: owner,
+            repo: repo,
+        });
+    }
+
+    public async listRepositoryEnvironmentBranchPolicies(owner: string, repo: string, name: string): Promise<{ id: number; name: string; }[]> {
+        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{name}/deployment-branch-policies", {
+            name: name,
+            owner: owner,
+            repo: repo,
+            per_page: 100
+        });
+    }
+
+    public async createRepositoryEnvironmentBranchPolicy(owner: string, repo: string, name: string, parameters: BranchPolicyRequest): Promise<{ id: number; name: string; }> {
+        return (await this.octokit.request("POST /repos/{owner}/{repo}/environments/{name}/deployment-branch-policies", {
+            ...parameters,
+            name: name,
+            owner: owner,
+            repo: repo,
+        })).data;
+    }
+
+    public async deleteRepositoryEnvironmentBranchPolicy(owner: string, repo: string, name: string, id: number): Promise<void> {
+        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{name}/deployment-branch-policies/{id}", {
+            name: name,
+            id: id,
+            owner: owner,
+            repo: repo,
+        });
     }
 
     private async encryptValue(key: string, value: string): Promise<string> {

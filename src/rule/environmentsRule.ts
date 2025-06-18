@@ -4,7 +4,7 @@ import * as core from "@actions/core";
 import GithubWrapper from "../githubWrapper";
 import {AllElement} from "src/type/configuration";
 
-export class EnvironmentsRule implements Rule<{ name: string; value: EnvironmentRequest; }[]> {
+export class EnvironmentsRule implements Rule<{ name: string; definition: EnvironmentRequest; }[]> {
     private readonly github: GithubWrapper;
 
     constructor(github: GithubWrapper) {
@@ -15,7 +15,7 @@ export class EnvironmentsRule implements Rule<{ name: string; value: Environment
         return 'environments creation/update';
     }
 
-    public extractData(element: AllElement): { name: string; value: EnvironmentRequest; }[] | undefined {
+    public extractData(element: AllElement): { name: string; definition: EnvironmentRequest; }[] | undefined {
         return element.environments;
     }
 
@@ -23,12 +23,12 @@ export class EnvironmentsRule implements Rule<{ name: string; value: Environment
         return undefined;
     }
 
-    public async apply(repository: RepositoryMetadata, data: { name: string; value: EnvironmentRequest; }[]): Promise<void> {
+    public async apply(repository: RepositoryMetadata, data: { name: string; definition: EnvironmentRequest; }[]): Promise<void> {
         for (const environment of data) {
             core.info(`Handling environment '${environment.name}'`);
 
             core.debug(`Environment '${environment.name}' will be created/edited`);
-            const result = await this.github.createOrEditRepositoryEnvironment(repository.owner, repository.name, environment.name, environment.value);
+            const result = await this.github.createOrEditRepositoryEnvironment(repository.owner, repository.name, environment.name, environment.definition);
             core.debug(`Ruleset update response is ${JSON.stringify(result)}`);
         }
     }

@@ -1,4 +1,4 @@
-import {EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryRulesetRequest} from "./github";
+import {BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryRulesetRequest} from "./github";
 
 export type Configuration = {
     elements: AllElement[];
@@ -23,10 +23,7 @@ export type Element = {
     features?: RepositoryConfigurationRequest;
     rulesets?: RepositoryRulesetRequest[];
     deleteRulesets?: string[];
-    environments?: {
-        name: string;
-        value: EnvironmentRequest;
-    }[];
+    environments?: Environment[];
     deleteEnvironments?: string[];
     files?: FilesOperation<File>;
     mergeFiles?: FilesOperation<MergeFile>;
@@ -38,6 +35,17 @@ export type Element = {
             value?: string;
         }[];
     }
+};
+
+export type Environment = {
+    name: string;
+    definition: EnvironmentRequest;
+    protectionRules?: ProtectionRule[];
+    branchPolicies?: BranchPolicyRequest[];
+};
+
+export type ProtectionRule = EnvironmentProtectionRuleRequest & {
+    slug: string;
 };
 
 export type CustomProperty = {

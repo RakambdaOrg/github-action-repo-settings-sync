@@ -44,6 +44,11 @@ export type EnvironmentRequest = {
     } | null;
 };
 
+export type BranchPolicyRequest = {
+    name: string;
+    type?: "branch" | "tag";
+};
+
 export type RepositoryRulesetRequest = {
     name: string;
     target?: "branch" | "tag" | "push";
@@ -51,6 +56,10 @@ export type RepositoryRulesetRequest = {
     bypass_actors?: RuleActor[] | undefined;
     conditions?: RuleConditions;
     rules?: AnyRuleRule[];
+};
+
+export type EnvironmentProtectionRuleRequest = {
+    integration_id: number;
 };
 
 export type AnyRuleRule = CodeScanningRuleRule | MergeQueueRuleRule | SimpleRuleRule | UpdateRuleRule | WorkflowsRuleRule | MaxFileSizeRuleRule | RequiredDeploymentsRuleRule | FileExtensionRestrictionRuleRule | PullRequestRuleRule | MaxFilePathLengthRuleRule | RequiredStatusChecksRuleRule | PatternRuleRule | FilePathRestrictionRuleRule;

@@ -18,6 +18,8 @@ import {FilesRule} from "./rule/filesRule";
 import {MergeFilesRule} from "./rule/mergeFilesRule";
 import {EnvironmentsRule} from "./rule/environmentsRule";
 import {EnvironmentsDeletionRule} from "./rule/environmentsDeletionRule";
+import {EnvironmentProtectionRulesRule} from "./rule/environmentProtectionRulesRule";
+import {EnvironmentBranchProtectionsRule} from "./rule/environmentBranchProtectionsRule";
 
 export class Main {
     private readonly github: GithubWrapper;
@@ -45,6 +47,8 @@ export class Main {
         this.rules = [
             new FeatureRule(this.github),
             new EnvironmentsRule(this.github),
+            new EnvironmentProtectionRulesRule(this.github),
+            new EnvironmentBranchProtectionsRule(this.github),
             new EnvironmentsDeletionRule(this.github),
             new RulesetsRule(this.github),
             new RulesetsDeletionRule(this.github),
