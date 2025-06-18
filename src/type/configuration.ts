@@ -1,4 +1,4 @@
-import {RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryRulesetRequest} from "./github";
+import {EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryRulesetRequest} from "./github";
 
 export type Configuration = {
     elements: AllElement[];
@@ -23,6 +23,11 @@ export type Element = {
     features?: RepositoryConfigurationRequest;
     rulesets?: RepositoryRulesetRequest[];
     deleteRulesets?: string[];
+    environments?: {
+        name: string;
+        value: EnvironmentRequest;
+    }[];
+    deleteEnvironments?: string[];
     files?: FilesOperation<File>;
     mergeFiles?: FilesOperation<MergeFile>;
     actions?: {

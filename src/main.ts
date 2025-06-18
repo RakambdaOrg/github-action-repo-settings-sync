@@ -16,6 +16,8 @@ import {RulesetsDeletionRule} from "./rule/rulesetsDeletionRule";
 import {ActionSecrets} from "./rule/actionSecrets";
 import {FilesRule} from "./rule/filesRule";
 import {MergeFilesRule} from "./rule/mergeFilesRule";
+import {EnvironmentsRule} from "./rule/environmentsRule";
+import {EnvironmentsDeletionRule} from "./rule/environmentsDeletionRule";
 
 export class Main {
     private readonly github: GithubWrapper;
@@ -42,6 +44,8 @@ export class Main {
         this.github = new GithubWrapper(token, appId, appPrivateKey, appInstallationId);
         this.rules = [
             new FeatureRule(this.github),
+            new EnvironmentsRule(this.github),
+            new EnvironmentsDeletionRule(this.github),
             new RulesetsRule(this.github),
             new RulesetsDeletionRule(this.github),
             new ActionPermissionsRule(this.github),

@@ -31,6 +31,19 @@ export type RepositoryConfigurationRequest = {
     merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
 };
 
+export type EnvironmentRequest = {
+    wait_timer?: number;
+    prevent_self_review?: boolean;
+    reviewers?: {
+        type: "User" | "Team";
+        id: number;
+    }[] | null;
+    deployment_branch_policy?: {
+        protected_branches: boolean;
+        custom_branch_policies: boolean;
+    } | null;
+};
+
 export type RepositoryRulesetRequest = {
     name: string;
     target?: "branch" | "tag" | "push";
@@ -40,7 +53,7 @@ export type RepositoryRulesetRequest = {
     rules?: AnyRuleRule[];
 };
 
-export type AnyRuleRule = CodeScanningRuleRule | MergeQueueRuleRule| SimpleRuleRule | UpdateRuleRule | WorkflowsRuleRule | MaxFileSizeRuleRule | RequiredDeploymentsRuleRule | FileExtensionRestrictionRuleRule | PullRequestRuleRule | MaxFilePathLengthRuleRule | RequiredStatusChecksRuleRule | PatternRuleRule | FilePathRestrictionRuleRule;
+export type AnyRuleRule = CodeScanningRuleRule | MergeQueueRuleRule | SimpleRuleRule | UpdateRuleRule | WorkflowsRuleRule | MaxFileSizeRuleRule | RequiredDeploymentsRuleRule | FileExtensionRestrictionRuleRule | PullRequestRuleRule | MaxFilePathLengthRuleRule | RequiredStatusChecksRuleRule | PatternRuleRule | FilePathRestrictionRuleRule;
 
 export type RuleActor = {
     actor_id?: number | null | undefined;

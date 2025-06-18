@@ -2,7 +2,7 @@ import {Octokit, OctokitOptions} from "@octokit/core";
 import {createAppAuth} from "@octokit/auth-app";
 import {PaginateInterface, paginateRest} from "@octokit/plugin-paginate-rest";
 import {throttling} from "@octokit/plugin-throttling";
-import {RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest} from "./type/github";
+import {EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest} from "./type/github";
 import * as core from '@actions/core';
 import _sodium from 'libsodium-wrappers';
 import {CustomProperty} from "./type/configuration";
@@ -280,6 +280,31 @@ export default class GithubWrapper {
             sha: sha,
             branch: branch,
             committer: committer,
+        })).data;
+    }
+    
+    public async listRepositoryEnvironments(owner: string, repo: string): Promise<{ id: number; name: string; }[]> {
+        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments", {
+            owner: owner,
+            repo: repo,
+            per_page: 100
+        });
+    }
+
+    public async deleteRepositoryEnvironment(owner: string, repo: string, name: string): Promise<void> {
+        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{name}", {
+            name: name,
+            owner: owner,
+            repo: repo,
+        });
+    }
+
+    public async createOrEditRepositoryEnvironment(owner: string, repo: string, name: string, parameters: EnvironmentRequest): Promise<{ id: number; name: string; }> {
+        return (await this.octokit.request("PUT /repos/{owner}/{repo}/environments/{name}", {
+            ...parameters,
+            name: name,
+            owner: owner,
+            repo: repo,
         })).data;
     }
 
