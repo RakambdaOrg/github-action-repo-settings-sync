@@ -1,6 +1,8 @@
 import {Octokit, OctokitOptions} from "@octokit/core";
 import {createAppAuth} from "@octokit/auth-app";
 import {PaginateInterface, paginateRest} from "@octokit/plugin-paginate-rest";
+import {restEndpointMethods, RestEndpointMethodTypes} from "@octokit/plugin-rest-endpoint-methods";
+import type {RestEndpointMethods} from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/method-types";
 import {throttling} from "@octokit/plugin-throttling";
 import {BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest} from "./type/github";
 import * as core from '@actions/core';
@@ -29,7 +31,7 @@ type FileContent = {
 };
 
 export default class GithubWrapper {
-    private readonly octokit: Octokit & { paginate: PaginateInterface };
+    private readonly octokit: Octokit & { paginate: PaginateInterface } & { rest: RestEndpointMethods };
 
     constructor(token?: string, appId?: string, appPrivateKey?: string, appInstallationId?: string) {
         // noinspection JSUnusedGlobalSymbols
@@ -63,7 +65,7 @@ export default class GithubWrapper {
             };
         }
 
-        const MyOctokit = Octokit.plugin(paginateRest, throttling);
+        const MyOctokit = Octokit.plugin(paginateRest, throttling, restEndpointMethods);
         this.octokit = new MyOctokit(octokitOptions);
     }
 
@@ -102,19 +104,19 @@ export default class GithubWrapper {
     }
 
     private async getOrganization(org: string): Promise<{ plan?: { name: string } }> {
-        return (await this.octokit.request("GET /orgs/{org}", {
+        return (await this.octokit.rest.orgs.get({
             org: org,
         })).data;
     }
 
     private async getUser(user: string): Promise<{ plan?: { name: string } }> {
-        return (await this.octokit.request("GET /users/{user}", {
-            user: user,
+        return (await this.octokit.rest.users.getByUsername({
+            username: user,
         })).data;
     }
 
     private async listAllOrgRepositories(orgName: string): Promise<RepositoryResponse[]> {
-        return await this.octokit.paginate("GET /orgs/{org}/repos", {
+        return await this.octokit.paginate(this.octokit.rest.repos.listForOrg, {
             org: orgName,
             sort: 'full_name',
             per_page: 100
@@ -122,15 +124,15 @@ export default class GithubWrapper {
     }
 
     private async listAllUserRepositories(user: string): Promise<RepositoryResponse[]> {
-        return await this.octokit.paginate("GET /users/{user}/repos", {
-            user: user,
+        return await this.octokit.paginate(this.octokit.rest.repos.listForUser, {
+            username: user,
             sort: 'full_name',
             per_page: 100
         });
     }
 
     private async listRepositoryProperties(owner: string, repo: string): Promise<{ property_name: string, value: string | string[] | null }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/properties/values", {
+        return await this.octokit.paginate(this.octokit.rest.repos.getCustomPropertiesValues, {
             owner: owner,
             repo: repo,
             per_page: 100
@@ -138,7 +140,7 @@ export default class GithubWrapper {
     }
 
     public async editRepositoryConfiguration(owner: string, repo: string, parameters: RepositoryConfigurationRequest): Promise<RepositoryResponse> {
-        return (await this.octokit.request("PATCH /repos/{owner}/{repo}", {
+        return (await this.octokit.rest.repos.update({
             ...parameters,
             owner: owner,
             repo: repo,
@@ -146,7 +148,7 @@ export default class GithubWrapper {
     }
 
     public async listRepositoryRulesets(owner: string, repo: string): Promise<{ id: number; name: string; }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/rulesets", {
+        return await this.octokit.paginate(this.octokit.rest.repos.getRepoRulesets, {
             owner: owner,
             repo: repo,
             per_page: 100
@@ -154,7 +156,7 @@ export default class GithubWrapper {
     }
 
     public async createRepositoryRuleset(owner: string, repo: string, parameters: RepositoryRulesetRequest): Promise<{ id: number; name: string; }> {
-        return (await this.octokit.request("POST /repos/{owner}/{repo}/rulesets", {
+        return (await this.octokit.rest.repos.createRepoRuleset({
             ...parameters,
             owner: owner,
             repo: repo,
@@ -162,24 +164,24 @@ export default class GithubWrapper {
     }
 
     public async editRepositoryRuleset(owner: string, repo: string, id: number, parameters: RepositoryRulesetRequest): Promise<{ id: number; name: string; }> {
-        return (await this.octokit.request("PUT /repos/{owner}/{repo}/rulesets/{id}", {
+        return (await this.octokit.rest.repos.updateRepoRuleset({
             ...parameters,
-            id: id,
+            ruleset_id: id,
             owner: owner,
             repo: repo,
         })).data;
     }
 
     public async deleteRepositoryRuleset(owner: string, repo: string, id: number): Promise<void> {
-        await this.octokit.request("DELETE /repos/{owner}/{repo}/rulesets/{id}", {
-            id: id,
+        await this.octokit.rest.repos.deleteRepoRuleset({
+            ruleset_id: id,
             owner: owner,
             repo: repo,
         });
     }
 
     public async editActionsPermissions(owner: string, repo: string, parameters: RepositoryActionsPermissionsRequest): Promise<void> {
-        await this.octokit.request("PUT /repos/{owner}/{repo}/actions/permissions", {
+        await this.octokit.rest.actions.setGithubActionsPermissionsRepository({
             ...parameters,
             owner: owner,
             repo: repo,
@@ -187,7 +189,7 @@ export default class GithubWrapper {
     }
 
     public async editActionsPermissionsAccess(owner: string, repo: string, parameters: RepositoryActionsAccessPermissionsRequest): Promise<void> {
-        await this.octokit.request("PUT /repos/{owner}/{repo}/actions/permissions/access", {
+        await this.octokit.rest.actions.setWorkflowAccessToRepository({
             ...parameters,
             owner: owner,
             repo: repo,
@@ -195,7 +197,7 @@ export default class GithubWrapper {
     }
 
     public async listRepositoryActionSecret(owner: string, repo: string): Promise<{ name: string }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/actions/secrets", {
+        return await this.octokit.paginate( this.octokit.rest.actions.listRepoSecrets, {
             owner: owner,
             repo: repo,
             per_page: 100
@@ -203,8 +205,8 @@ export default class GithubWrapper {
     }
 
     public async deleteActionSecret(owner: string, repo: string, name: string): Promise<void> {
-        await this.octokit.request("DELETE /repos/{owner}/{repo}/actions/secrets/{name}", {
-            name: name,
+        await this.octokit.rest.actions.deleteRepoSecret({
+            secret_name: name,
             owner: owner,
             repo: repo,
         });
@@ -213,24 +215,24 @@ export default class GithubWrapper {
     public async editActionSecret(owner: string, repo: string, keyId: string, key: string, name: string, value: string): Promise<void> {
         const encryptedValue = await this.encryptValue(key, value);
 
-        await this.octokit.request("PUT /repos/{owner}/{repo}/actions/secrets/{name}", {
+        await this.octokit.rest.actions.createOrUpdateRepoSecret({
             encrypted_value: encryptedValue,
             key_id: keyId,
-            name: name,
+            secret_name: name,
             owner: owner,
             repo: repo,
         });
     }
 
     public async getRepositoryPublicKey(owner: string, repo: string): Promise<{ key_id: string; key: string; }> {
-        return (await this.octokit.request("GET /repos/{owner}/{repo}/actions/secrets/public-key", {
+        return (await this.octokit.rest.actions.getRepoPublicKey({
             owner: owner,
             repo: repo,
         })).data;
     }
 
     public async listRepositoryBranches(owner: string, repo: string): Promise<{ name: string; commit: { sha: string }; }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/branches", {
+        return await this.octokit.paginate(this.octokit.rest.repos.listBranches, {
             owner: owner,
             repo: repo,
             per_page: 100
@@ -238,7 +240,7 @@ export default class GithubWrapper {
     }
 
     public async getFileMeta(owner: string, repo: string, path: string, ref?: string): Promise<FileContent> {
-        const result = (await this.octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+        const result = (await this.octokit.rest.repos.getContent({
             owner: owner,
             repo: repo,
             path: path,
@@ -259,7 +261,7 @@ export default class GithubWrapper {
     public async editFile(owner: string, repo: string, path: string, message: string, content: string, sha?: string, branch?: string, committer?: { name: string, email: string }): Promise<{ commit: { sha?: string; html_url?: string; } }> {
         const encodedContent = this.encodeBase64(content);
 
-        return (await this.octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
+        return (await this.octokit.rest.repos.createOrUpdateFileContents({
             owner: owner,
             repo: repo,
             path: path,
@@ -272,7 +274,7 @@ export default class GithubWrapper {
     }
 
     public async deleteFile(owner: string, repo: string, path: string, message: string, sha: string, branch?: string, committer?: { name: string, email: string }): Promise<{ commit: { sha?: string; html_url?: string; } }> {
-        return (await this.octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
+        return (await this.octokit.rest.repos.deleteFile({
             owner: owner,
             repo: repo,
             path: path,
@@ -284,87 +286,87 @@ export default class GithubWrapper {
     }
 
     public async listRepositoryEnvironments(owner: string, repo: string): Promise<{ id: number; name: string; }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments", {
+        return (await this.octokit.rest.repos.getAllEnvironments({
             owner: owner,
             repo: repo,
             per_page: 100
-        });
+        })).data.environments ?? [];
     }
 
     public async deleteRepositoryEnvironment(owner: string, repo: string, name: string): Promise<void> {
-        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{name}", {
-            name: name,
+        await this.octokit.rest.repos.deleteAnEnvironment({
+            environment_name: name,
             owner: owner,
             repo: repo,
         });
     }
 
     public async createOrEditRepositoryEnvironment(owner: string, repo: string, name: string, parameters: EnvironmentRequest): Promise<{ id: number; name: string; }> {
-        return (await this.octokit.request("PUT /repos/{owner}/{repo}/environments/{name}", {
+        return (await this.octokit.rest.repos.createOrUpdateEnvironment({
             ...parameters,
-            name: name,
+            environment_name: name,
             owner: owner,
             repo: repo,
         })).data;
     }
 
     public async listRepositoryEnvironmentProtectionRules(owner: string, repo: string, environment: string): Promise<{ id: number; enabled: boolean; app: { slug: string; }; }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{environment}/deployment_protection_rules", {
-            environment: environment,
+        return (await this.octokit.rest.repos.getAllDeploymentProtectionRules({
+            environment_name: environment,
             owner: owner,
             repo: repo,
             per_page: 100
-        });
+        })).data.custom_deployment_protection_rules ?? [];
     }
 
-    public async createRepositoryEnvironmentProtectionRule(owner: string, repo: string, environment: string, parameters: EnvironmentProtectionRuleRequest): Promise<{ id: number; name: string; }> {
-        return (await this.octokit.request("POST /repos/{owner}/{repo}/environments/{environment}/deployment_protection_rules", {
+    public async createRepositoryEnvironmentProtectionRule(owner: string, repo: string, environment: string, parameters: EnvironmentProtectionRuleRequest): Promise<RestEndpointMethodTypes["repos"]["createDeploymentProtectionRule"]["response"]["data"]> {
+        return (await this.octokit.rest.repos.createDeploymentProtectionRule({
             ...parameters,
-            environment: environment,
+            environment_name: environment,
             owner: owner,
             repo: repo,
         })).data;
     }
 
     public async deleteRepositoryEnvironmentProtectionRule(owner: string, repo: string, environment: string, id: number): Promise<void> {
-        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{environment}/deployment_protection_rules/{id}", {
-            environment: environment,
-            id: id,
+        await this.octokit.rest.repos.disableDeploymentProtectionRule({
+            environment_name: environment,
+            protection_rule_id: id,
             owner: owner,
             repo: repo,
         });
     }
 
-    public async listRepositoryEnvironmentBranchPolicies(owner: string, repo: string, environment: string): Promise<{ id: number; name: string; }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{environment}/deployment-branch-policies", {
-            environment: environment,
+    public async listRepositoryEnvironmentBranchPolicies(owner: string, repo: string, environment: string): Promise<{ id?: number; name?: string; }[]> {
+        return (await this.octokit.rest.repos.listDeploymentBranchPolicies({
+            environment_name: environment,
             owner: owner,
             repo: repo,
             per_page: 100
-        });
+        })).data.branch_policies;
     }
 
-    public async createRepositoryEnvironmentBranchPolicy(owner: string, repo: string, environment: string, parameters: BranchPolicyRequest): Promise<{ id: number; name: string; }> {
-        return (await this.octokit.request("POST /repos/{owner}/{repo}/environments/{environment}/deployment-branch-policies", {
+    public async createRepositoryEnvironmentBranchPolicy(owner: string, repo: string, environment: string, parameters: BranchPolicyRequest): Promise<RestEndpointMethodTypes["repos"]["createDeploymentBranchPolicy"]["response"]['data']> {
+        return (await this.octokit.rest.repos.createDeploymentBranchPolicy({
             ...parameters,
-            environment: environment,
+            environment_name: environment,
             owner: owner,
             repo: repo,
         })).data;
     }
 
     public async deleteRepositoryEnvironmentBranchPolicy(owner: string, repo: string, environment: string, id: number): Promise<void> {
-        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{environment}/deployment-branch-policies/{id}", {
-            environment: environment,
-            id: id,
+        await this.octokit.rest.repos.deleteDeploymentBranchPolicy({
+            environment_name: environment,
+            branch_policy_id: id,
             owner: owner,
             repo: repo,
         });
     }
 
     public async listRepositoryEnvironmentSecret(owner: string, repo: string, environment: string): Promise<{ name: string }[]> {
-        return await this.octokit.paginate("GET /repos/{owner}/{repo}/environments/{environment}/secrets", {
-            environment: environment,
+        return await this.octokit.paginate(this.octokit.rest.actions.listEnvironmentSecrets, {
+            environment_name: environment,
             owner: owner,
             repo: repo,
             per_page: 100
@@ -372,9 +374,9 @@ export default class GithubWrapper {
     }
 
     public async deleteEnvironmentSecret(owner: string, repo: string, environment: string, name: string): Promise<void> {
-        await this.octokit.request("DELETE /repos/{owner}/{repo}/environments/{environment}/secrets/{name}", {
-            environment: environment,
-            name: name,
+        await this.octokit.rest.actions.deleteEnvironmentSecret({
+            environment_name: environment,
+            secret_name: name,
             owner: owner,
             repo: repo,
         });
@@ -383,11 +385,11 @@ export default class GithubWrapper {
     public async editEnvironmentSecret(owner: string, repo: string, environment: string, keyId: string, key: string, name: string, value: string): Promise<void> {
         const encryptedValue = await this.encryptValue(key, value);
 
-        await this.octokit.request("PUT /repos/{owner}/{repo}/environments/{environment}/secrets/{name}", {
+        await this.octokit.rest.actions.createOrUpdateEnvironmentSecret({
             encrypted_value: encryptedValue,
             key_id: keyId,
-            environment: environment,
-            name: name,
+            environment_name: environment,
+            secret_name: name,
             owner: owner,
             repo: repo,
         });

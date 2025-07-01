@@ -29,7 +29,9 @@ export class EnvironmentProtectionRulesRule implements Rule<{ name: string; bran
                 continue;
             }
             core.info(`Handling environment '${environment.name}'`);
-            const currentPolicies = await this.github.listRepositoryEnvironmentBranchPolicies(repository.owner, repository.name, environment.name);
+            const currentPolicies = (await this.github.listRepositoryEnvironmentBranchPolicies(repository.owner, repository.name, environment.name))
+                    .filter(r => r.name !== undefined && r.id !== undefined)
+                    .map(r => r as { id: number; name: string; });
 
             await this.handleCreations(repository, environment.name, environment.branchPolicies, currentPolicies);
             await this.handleDeletions(repository, environment.name, environment.branchPolicies, currentPolicies);
