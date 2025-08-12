@@ -1,8 +1,8 @@
-import {RepositoryMetadata} from "src/type/github";
-import {Rule} from "../rule";
-import * as core from "@actions/core";
-import GithubWrapper from "../githubWrapper";
-import {AllElement} from "src/type/configuration";
+import * as core from '@actions/core';
+import { AllElement } from 'src/type/configuration';
+import { RepositoryMetadata } from 'src/type/github';
+import GithubWrapper from '../githubWrapper';
+import { Rule } from '../rule';
 
 type Data = { name: string; value?: string };
 
@@ -26,13 +26,13 @@ export class ActionSecrets implements Rule<Data[]> {
     }
 
     public async apply(repository: RepositoryMetadata, data: Data[]): Promise<void> {
-        core.debug("Getting repository public key");
+        core.debug('Getting repository public key');
         const key = await this.github.getRepositoryPublicKey(repository.owner, repository.name);
         const currentSecrets = await this.github.listRepositoryActionSecret(repository.owner, repository.name);
 
         for (const secret of data) {
             core.info(`Handling secret '${secret.name}'`);
-            const previousSecret = currentSecrets.find(s => s.name === secret.name);
+            const previousSecret = currentSecrets.find((s) => s.name === secret.name);
 
             if (secret.value === undefined || secret.value === null) {
                 if (previousSecret) {
@@ -40,7 +40,7 @@ export class ActionSecrets implements Rule<Data[]> {
                     const result = await this.github.deleteActionSecret(repository.owner, repository.name, secret.name);
                     core.debug(`Secret deletion response is ${JSON.stringify(result)}`);
                 } else {
-                    core.debug("Secret does not exists");
+                    core.debug('Secret does not exists');
                 }
             } else {
                 core.debug(`Secret '${secret.name}' will be created/edited`);

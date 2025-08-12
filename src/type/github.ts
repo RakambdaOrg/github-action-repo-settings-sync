@@ -6,7 +6,7 @@ export type RepositoryMetadata = {
     ownerType: string;
     plan: string;
     private: boolean;
-    properties: { property_name: string, value: string | string[] | null }[];
+    properties: { property_name: string; value: string | string[] | null }[];
     visibility: string;
     defaultBranch?: string;
     html_url: string;
@@ -25,19 +25,21 @@ export type RepositoryConfigurationRequest = {
     delete_branch_on_merge?: boolean;
     allow_update_branch?: boolean;
     use_squash_pr_title_as_default?: boolean;
-    squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
-    squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
-    merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
-    merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
+    squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
+    squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
+    merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
+    merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
 };
 
 export type EnvironmentRequest = {
     wait_timer?: number;
     prevent_self_review?: boolean;
-    reviewers?: {
-        type: "User" | "Team";
-        id: number;
-    }[] | null;
+    reviewers?:
+        | {
+              type: 'User' | 'Team';
+              id: number;
+          }[]
+        | null;
     deployment_branch_policy?: {
         protected_branches: boolean;
         custom_branch_policies: boolean;
@@ -46,13 +48,13 @@ export type EnvironmentRequest = {
 
 export type BranchPolicyRequest = {
     name: string;
-    type?: "branch" | "tag";
+    type?: 'branch' | 'tag';
 };
 
 export type RepositoryRulesetRequest = {
     name: string;
-    target?: "branch" | "tag" | "push";
-    enforcement: "disabled" | "active" | "evaluate";
+    target?: 'branch' | 'tag' | 'push';
+    enforcement: 'disabled' | 'active' | 'evaluate';
     bypass_actors?: RuleActor[] | undefined;
     conditions?: RuleConditions;
     rules?: AnyRuleRule[];
@@ -66,8 +68,8 @@ export type AnyRuleRule = CodeScanningRuleRule | MergeQueueRuleRule | SimpleRule
 
 export type RuleActor = {
     actor_id?: number | null | undefined;
-    actor_type: "Integration" | "OrganizationAdmin" | "RepositoryRole" | "Team" | "DeployKey";
-    bypass_mode: "always" | "pull_request";
+    actor_type: 'Integration' | 'OrganizationAdmin' | 'RepositoryRole' | 'Team' | 'DeployKey';
+    bypass_mode: 'always' | 'pull_request';
 };
 
 export type RuleConditions = {
@@ -78,50 +80,50 @@ export type RuleConditions = {
 };
 
 export type SimpleRuleRule = {
-    type: "creation" | "deletion" | "required_linear_history" | "required_signatures" | "non_fast_forward";
+    type: 'creation' | 'deletion' | 'required_linear_history' | 'required_signatures' | 'non_fast_forward';
 };
 
 export type UpdateRuleRule = {
-    type: "update";
+    type: 'update';
     parameters: {
         update_allows_fetch_and_merge: boolean;
-    }
+    };
 };
 
 export type MergeQueueRuleRule = {
-    type: "merge_queue";
+    type: 'merge_queue';
     parameters: {
         check_response_timeout_minutes: number;
-        grouping_strategy: "ALLGREEN" | "HEADGREEN";
+        grouping_strategy: 'ALLGREEN' | 'HEADGREEN';
         max_entries_to_build: number;
         max_entries_to_merge: number;
-        merge_method: "MERGE" | "SQUASH" | "REBASE";
+        merge_method: 'MERGE' | 'SQUASH' | 'REBASE';
         min_entries_to_merge: number;
         min_entries_to_merge_wait_minutes: number;
-    }
+    };
 };
 
 export type RequiredDeploymentsRuleRule = {
-    type: "required_deployments";
+    type: 'required_deployments';
     parameters: {
         required_deployment_environments: string[];
-    }
+    };
 };
 
 export type PullRequestRuleRule = {
-    type: "pull_request";
+    type: 'pull_request';
     parameters: {
-        allowed_merge_methods?: ("merge" | "squash" | "rebase")[];
+        allowed_merge_methods?: ('merge' | 'squash' | 'rebase')[];
         dismiss_stale_reviews_on_push: boolean;
         require_code_owner_review: boolean;
         require_last_push_approval: boolean;
         required_approving_review_count: number;
         required_review_thread_resolution: boolean;
-    }
+    };
 };
 
 export type RequiredStatusChecksRuleRule = {
-    type: "required_status_checks";
+    type: 'required_status_checks';
     parameters: {
         do_not_enforce_on_create?: boolean;
         required_status_checks: {
@@ -129,49 +131,49 @@ export type RequiredStatusChecksRuleRule = {
             integration_id?: number;
         }[];
         strict_required_status_checks_policy: boolean;
-    }
+    };
 };
 
 export type PatternRuleRule = {
-    type: "commit_message_pattern" | "commit_author_email_pattern" | "committer_email_pattern" | "branch_name_pattern" | "tag_name_pattern";
+    type: 'commit_message_pattern' | 'commit_author_email_pattern' | 'committer_email_pattern' | 'branch_name_pattern' | 'tag_name_pattern';
     parameters: {
         name?: string;
         negate?: boolean;
-        operator: "starts_with" | "ends_with" | "contains" | "regex";
+        operator: 'starts_with' | 'ends_with' | 'contains' | 'regex';
         pattern: string;
     };
 };
 
 export type FilePathRestrictionRuleRule = {
-    type: "file_path_restriction";
+    type: 'file_path_restriction';
     parameters: {
         restricted_file_paths: string[];
     };
 };
 
 export type FileExtensionRestrictionRuleRule = {
-    type: "file_extension_restriction";
+    type: 'file_extension_restriction';
     parameters: {
         restricted_file_extensions: string[];
     };
 };
 
 export type MaxFilePathLengthRuleRule = {
-    type: "max_file_path_length";
+    type: 'max_file_path_length';
     parameters: {
         max_file_path_length: number;
     };
 };
 
 export type MaxFileSizeRuleRule = {
-    type: "max_file_size";
+    type: 'max_file_size';
     parameters: {
         max_file_size: number;
     };
 };
 
 export type WorkflowsRuleRule = {
-    type: "workflows";
+    type: 'workflows';
     parameters: {
         do_not_enforce_on_create?: boolean;
         workflows: {
@@ -183,13 +185,12 @@ export type WorkflowsRuleRule = {
     };
 };
 
-
 export type CodeScanningRuleRule = {
-    type: "code_scanning";
+    type: 'code_scanning';
     parameters: {
         code_scanning_tools: {
-            alerts_threshold: "none" | "errors" | "errors_and_warnings" | "all";
-            security_alerts_threshold: "none" | "critical" | "high_or_higher" | "medium_or_higher" | "all";
+            alerts_threshold: 'none' | 'errors' | 'errors_and_warnings' | 'all';
+            security_alerts_threshold: 'none' | 'critical' | 'high_or_higher' | 'medium_or_higher' | 'all';
             tool: string;
         }[];
     };
@@ -197,9 +198,9 @@ export type CodeScanningRuleRule = {
 
 export type RepositoryActionsPermissionsRequest = {
     enabled: boolean;
-    allowed_actions?: "all" | "local_only" | "selected";
+    allowed_actions?: 'all' | 'local_only' | 'selected';
 };
 
 export type RepositoryActionsAccessPermissionsRequest = {
-    access_level: "none" | "user" | "organization";
+    access_level: 'none' | 'user' | 'organization';
 };

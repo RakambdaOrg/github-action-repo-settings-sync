@@ -1,9 +1,9 @@
-import {RepositoryMetadata} from "src/type/github";
-import {AllElement, FilesOperation, MergeFile} from "../type/configuration";
-import GithubWrapper from "../githubWrapper";
-import lodash from "lodash";
-import {AbstractFilesRule} from "./abstractFilesRule";
-import yaml from "yaml";
+import lodash from 'lodash';
+import { RepositoryMetadata } from 'src/type/github';
+import yaml from 'yaml';
+import GithubWrapper from '../githubWrapper';
+import { AllElement, FilesOperation, MergeFile } from '../type/configuration';
+import { AbstractFilesRule } from './abstractFilesRule';
 
 export class MergeFilesRule extends AbstractFilesRule<MergeFile> {
     constructor(github: GithubWrapper) {
@@ -52,25 +52,25 @@ export class MergeFilesRule extends AbstractFilesRule<MergeFile> {
         return this.transformObjectToContent(merged, data.type);
     }
 
-    private transformContentToObject(content: string, type: "json" | "yml" | "yaml"): any | undefined {
+    private transformContentToObject(content: string, type: 'json' | 'yml' | 'yaml'): any | undefined {
         switch (type) {
-            case "json":
+            case 'json':
                 return JSON.parse(content);
-            case "yaml":
-            case "yml":
+            case 'yaml':
+            case 'yml':
                 return yaml.parse(content);
             default:
                 return undefined;
         }
     }
 
-    private transformObjectToContent(data: any, type: "json" | "yml" | "yaml") {
+    private transformObjectToContent(data: any, type: 'json' | 'yml' | 'yaml') {
         switch (type) {
-            case "json":
+            case 'json':
                 return JSON.stringify(data, null, 4);
-            case "yaml":
-            case "yml":
-                return yaml.stringify(data, {version: '1.1', singleQuote: true});
+            case 'yaml':
+            case 'yml':
+                return yaml.stringify(data, { version: '1.1', singleQuote: true });
             default:
                 return undefined;
         }

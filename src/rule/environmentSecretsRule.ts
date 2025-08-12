@@ -1,10 +1,10 @@
-import {RepositoryMetadata} from "src/type/github";
-import {Rule} from "../rule";
-import * as core from "@actions/core";
-import GithubWrapper from "../githubWrapper";
-import {ActionSecret, AllElement} from "src/type/configuration";
+import * as core from '@actions/core';
+import { ActionSecret, AllElement } from 'src/type/configuration';
+import { RepositoryMetadata } from 'src/type/github';
+import GithubWrapper from '../githubWrapper';
+import { Rule } from '../rule';
 
-export class EnvironmentSecretsRule implements Rule<{ name: string; secrets?: ActionSecret[]; }[]> {
+export class EnvironmentSecretsRule implements Rule<{ name: string; secrets?: ActionSecret[] }[]> {
     private readonly github: GithubWrapper;
 
     constructor(github: GithubWrapper) {
@@ -15,7 +15,7 @@ export class EnvironmentSecretsRule implements Rule<{ name: string; secrets?: Ac
         return 'environment secrets creation/update/delete';
     }
 
-    public extractData(element: AllElement): { name: string; secrets?: ActionSecret[]; }[] | undefined {
+    public extractData(element: AllElement): { name: string; secrets?: ActionSecret[] }[] | undefined {
         return element.environments;
     }
 
@@ -23,20 +23,20 @@ export class EnvironmentSecretsRule implements Rule<{ name: string; secrets?: Ac
         return undefined;
     }
 
-    public async apply(repository: RepositoryMetadata, data: { name: string; secrets?: ActionSecret[]; }[]): Promise<void> {
+    public async apply(repository: RepositoryMetadata, data: { name: string; secrets?: ActionSecret[] }[]): Promise<void> {
         for (const environment of data) {
             if (!environment.secrets) {
                 continue;
             }
             core.info(`Handling environment '${environment.name}'`);
 
-            core.debug("Getting repository public key");
+            core.debug('Getting repository public key');
             const key = await this.github.getRepositoryEnvironmentPublicKey(repository.owner, repository.name, environment.name);
             const currentSecrets = await this.github.listRepositoryEnvironmentSecret(repository.owner, repository.name, environment.name);
 
             for (const secret of environment.secrets) {
                 core.info(`Handling environment secret '${secret.name}'`);
-                const previousSecret = currentSecrets.find(s => s.name === secret.name);
+                const previousSecret = currentSecrets.find((s) => s.name === secret.name);
 
                 if (secret.value === undefined || secret.value === null) {
                     if (previousSecret) {
@@ -44,7 +44,7 @@ export class EnvironmentSecretsRule implements Rule<{ name: string; secrets?: Ac
                         const result = await this.github.deleteEnvironmentSecret(repository.owner, repository.name, environment.name, secret.name);
                         core.debug(`Environment secret deletion response is ${JSON.stringify(result)}`);
                     } else {
-                        core.debug("Environment secret does not exists");
+                        core.debug('Environment secret does not exists');
                     }
                 } else {
                     core.debug(`Environment secret '${secret.name}' will be created/edited`);

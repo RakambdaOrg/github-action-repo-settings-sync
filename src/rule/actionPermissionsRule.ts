@@ -1,8 +1,8 @@
-import {RepositoryMetadata} from "src/type/github";
-import {Rule} from "../rule";
-import {RepositoryActionsPermissionsRequest} from "../type/github";
-import GithubWrapper from "../githubWrapper";
-import {AllElement} from "src/type/configuration";
+import { AllElement } from 'src/type/configuration';
+import { RepositoryMetadata } from 'src/type/github';
+import GithubWrapper from '../githubWrapper';
+import { Rule } from '../rule';
+import { RepositoryActionsPermissionsRequest } from '../type/github';
 
 export class ActionPermissionsRule implements Rule<RepositoryActionsPermissionsRequest> {
     private readonly github: GithubWrapper;

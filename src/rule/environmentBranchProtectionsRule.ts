@@ -1,10 +1,10 @@
-import {EnvironmentRequest, RepositoryMetadata} from "src/type/github";
-import {Rule} from "../rule";
-import * as core from "@actions/core";
-import GithubWrapper from "../githubWrapper";
-import {AllElement, ProtectionRule} from "src/type/configuration";
+import * as core from '@actions/core';
+import { AllElement, ProtectionRule } from 'src/type/configuration';
+import { EnvironmentRequest, RepositoryMetadata } from 'src/type/github';
+import GithubWrapper from '../githubWrapper';
+import { Rule } from '../rule';
 
-export class EnvironmentBranchProtectionsRule implements Rule<{ name: string; definition: EnvironmentRequest; }[]> {
+export class EnvironmentBranchProtectionsRule implements Rule<{ name: string; definition: EnvironmentRequest }[]> {
     private readonly github: GithubWrapper;
 
     constructor(github: GithubWrapper) {
@@ -15,7 +15,7 @@ export class EnvironmentBranchProtectionsRule implements Rule<{ name: string; de
         return 'environment branch protection creation/update/deletion';
     }
 
-    public extractData(element: AllElement): { name: string; definition: EnvironmentRequest; }[] | undefined {
+    public extractData(element: AllElement): { name: string; definition: EnvironmentRequest }[] | undefined {
         return element.environments;
     }
 
@@ -23,7 +23,7 @@ export class EnvironmentBranchProtectionsRule implements Rule<{ name: string; de
         return undefined;
     }
 
-    public async apply(repository: RepositoryMetadata, data: { name: string; protectionRules?: ProtectionRule[]; }[]): Promise<void> {
+    public async apply(repository: RepositoryMetadata, data: { name: string; protectionRules?: ProtectionRule[] }[]): Promise<void> {
         for (const environment of data) {
             if (!environment.protectionRules) {
                 continue;
@@ -36,9 +36,9 @@ export class EnvironmentBranchProtectionsRule implements Rule<{ name: string; de
         }
     }
 
-    private async handleCreations(repository: RepositoryMetadata, environmentName: string, protectionRules: ProtectionRule[], currentRules: { enabled: boolean; app: { slug: string; }; }[]): Promise<void> {
+    private async handleCreations(repository: RepositoryMetadata, environmentName: string, protectionRules: ProtectionRule[], currentRules: { enabled: boolean; app: { slug: string } }[]): Promise<void> {
         for (const rule of protectionRules) {
-            const ruleExists = currentRules.find(r => r.enabled && r.app.slug === rule.slug);
+            const ruleExists = currentRules.find((r) => r.enabled && r.app.slug === rule.slug);
             if (ruleExists) {
                 core.debug(`Protection rule '${rule.slug}' already exists`);
             } else {
@@ -49,12 +49,12 @@ export class EnvironmentBranchProtectionsRule implements Rule<{ name: string; de
         }
     }
 
-    private async handleDeletions(repository: RepositoryMetadata, environmentName: string, protectionRules: ProtectionRule[], currentRules: { id: number, enabled: boolean; app: { slug: string; }; }[]): Promise<void> {
+    private async handleDeletions(repository: RepositoryMetadata, environmentName: string, protectionRules: ProtectionRule[], currentRules: { id: number; enabled: boolean; app: { slug: string } }[]): Promise<void> {
         for (const rule of currentRules) {
             if (!rule.enabled) {
                 continue;
             }
-            const ruleDeleted = protectionRules.find(r => r.slug === rule.app.slug);
+            const ruleDeleted = protectionRules.find((r) => r.slug === rule.app.slug);
             if (ruleDeleted) {
                 core.debug(`Protection rule '${rule.app.slug}' will be disabled`);
                 const result = await this.github.deleteRepositoryEnvironmentProtectionRule(repository.owner, repository.name, environmentName, rule.id);

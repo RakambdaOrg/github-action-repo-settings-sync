@@ -1,10 +1,10 @@
-import {RepositoryMetadata} from "src/type/github";
-import {Rule} from "../rule";
-import {FilesOperation} from "../type/configuration";
-import * as core from "@actions/core";
-import GithubWrapper from "../githubWrapper";
-import {AllElement} from "src/type/configuration";
-import fs from "fs-extra";
+import * as core from '@actions/core';
+import fs from 'fs-extra';
+import { AllElement } from 'src/type/configuration';
+import { RepositoryMetadata } from 'src/type/github';
+import GithubWrapper from '../githubWrapper';
+import { Rule } from '../rule';
+import { FilesOperation } from '../type/configuration';
 
 export abstract class AbstractFilesRule<T extends { destination: string }> implements Rule<FilesOperation<T>> {
     protected readonly github: GithubWrapper;
@@ -18,7 +18,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
     public abstract extractData(_: AllElement): FilesOperation<T> | undefined;
 
     public async canApply(repository: RepositoryMetadata): Promise<string | undefined> {
-        return repository.defaultBranch ? undefined : "Default branch unknown";
+        return repository.defaultBranch ? undefined : 'Default branch unknown';
     }
 
     protected abstract getContent(_: T, __: RepositoryMetadata): Promise<string | undefined>;
@@ -33,7 +33,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
 
         const currentBranches = await this.github.listRepositoryBranches(repository.owner, repository.name);
 
-        const branchExists = currentBranches.find(b => b.name === branchName);
+        const branchExists = currentBranches.find((b) => b.name === branchName);
         if (!branchExists) {
             core.error(`Branch ${branchName} does not exist`);
             return;
@@ -52,7 +52,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
                     continue;
                 }
                 const commitMessage = `Removing file ${file.destination} from ${selfRepo} (run ${runId} | #${runNumber})`;
-                const result = await this.github.deleteFile(repository.owner, repository.name, file.destination, commitMessage, previousFile.sha, branchName, {name: committerName, email: committerEmail});
+                const result = await this.github.deleteFile(repository.owner, repository.name, file.destination, commitMessage, previousFile.sha, branchName, { name: committerName, email: committerEmail });
                 core.info(`Deleted file in commit ${result.commit.sha} : ${result.commit.html_url}`);
             } else {
                 core.debug(`Editing file`);
@@ -61,13 +61,13 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
                     continue;
                 }
                 const commitMessage = `Synchronizing file ${file.destination} from ${selfRepo} (run ${runId} | #${runNumber})`;
-                const result = await this.github.editFile(repository.owner, repository.name, file.destination, commitMessage, content, previousFile?.sha, branchName, {name: committerName, email: committerEmail});
+                const result = await this.github.editFile(repository.owner, repository.name, file.destination, commitMessage, content, previousFile?.sha, branchName, { name: committerName, email: committerEmail });
                 core.info(`Edited file in commit ${result.commit.sha} : ${result.commit.html_url}`);
             }
         }
     }
 
-    private async getPreviousFileMeta(owner: string, repo: string, path: string, ref?: string): Promise<{ type: string; sha: string; content?: string; } | undefined> {
+    private async getPreviousFileMeta(owner: string, repo: string, path: string, ref?: string): Promise<{ type: string; sha: string; content?: string } | undefined> {
         let result;
         try {
             result = await this.github.getFileMeta(owner, repo, path, ref);
@@ -78,7 +78,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
             throw e;
         }
 
-        const resultObj = result as { type: "dir" | "file" | "submodule" | "symlink", sha: string };
+        const resultObj = result as { type: 'dir' | 'file' | 'submodule' | 'symlink'; sha: string };
         if (resultObj.type !== 'file') {
             throw new Error(`Found element of type ${resultObj.type}`);
         }
@@ -87,7 +87,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
     }
 
     protected async readFile(path: string): Promise<string | undefined> {
-        if (!await fs.pathExists(path)) {
+        if (!(await fs.pathExists(path))) {
             throw new Error(`File ${path} not found`);
         }
         return await fs.promises.readFile(path, 'utf8');

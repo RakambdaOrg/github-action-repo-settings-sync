@@ -1,9 +1,9 @@
-import {RepositoryMetadata} from "src/type/github";
-import {Rule} from "../rule";
-import {RepositoryRulesetRequest} from "../type/github";
-import * as core from "@actions/core";
-import GithubWrapper from "../githubWrapper";
-import {AllElement} from "src/type/configuration";
+import * as core from '@actions/core';
+import { AllElement } from 'src/type/configuration';
+import { RepositoryMetadata } from 'src/type/github';
+import GithubWrapper from '../githubWrapper';
+import { Rule } from '../rule';
+import { RepositoryRulesetRequest } from '../type/github';
 
 export class RulesetsRule implements Rule<RepositoryRulesetRequest[]> {
     private readonly github: GithubWrapper;
@@ -21,7 +21,7 @@ export class RulesetsRule implements Rule<RepositoryRulesetRequest[]> {
     }
 
     public async canApply(repository: RepositoryMetadata): Promise<string | undefined> {
-        return repository.private && repository.plan === "free" ? "Your plan does not allow it" : undefined;
+        return repository.private && repository.plan === 'free' ? 'Your plan does not allow it' : undefined;
     }
 
     public async apply(repository: RepositoryMetadata, data: RepositoryRulesetRequest[]): Promise<void> {
@@ -29,7 +29,7 @@ export class RulesetsRule implements Rule<RepositoryRulesetRequest[]> {
         for (const ruleset of data) {
             core.info(`Handling ruleset '${ruleset.name}'`);
 
-            const rulesetExists = currentRulesets.find(r => r.name === ruleset.name);
+            const rulesetExists = currentRulesets.find((r) => r.name === ruleset.name);
             if (rulesetExists) {
                 core.debug(`Ruleset '${ruleset.name}' will be edited`);
                 const result = await this.github.editRepositoryRuleset(repository.owner, repository.name, rulesetExists.id, ruleset);

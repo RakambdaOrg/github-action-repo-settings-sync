@@ -1,26 +1,26 @@
-import {getInput} from "action-input-parser";
-import {AllElement, Configuration} from "./type/configuration";
+import * as core from '@actions/core';
+import { getInput } from 'action-input-parser';
+import { Ajv } from 'ajv';
 import fs from 'fs-extra';
+import * as path from 'node:path';
 import yaml from 'yaml';
-import GithubWrapper from "./githubWrapper";
-import * as core from "@actions/core";
-import {Ajv} from "ajv";
-import * as path from "node:path";
-import {RepositoryMetadata} from "./type/github";
-import {Rule} from "./rule";
-import {FeatureRule} from "./rule/featureRule";
-import {ActionPermissionsRule} from "./rule/actionPermissionsRule";
-import {ActionPermissionsAccessRule} from "./rule/actionPermissionsAccessRule";
-import {RulesetsRule} from "./rule/rulesetsRule";
-import {RulesetsDeletionRule} from "./rule/rulesetsDeletionRule";
-import {ActionSecrets} from "./rule/actionSecrets";
-import {FilesRule} from "./rule/filesRule";
-import {MergeFilesRule} from "./rule/mergeFilesRule";
-import {EnvironmentsRule} from "./rule/environmentsRule";
-import {EnvironmentsDeletionRule} from "./rule/environmentsDeletionRule";
-import {EnvironmentProtectionRulesRule} from "./rule/environmentProtectionRulesRule";
-import {EnvironmentBranchProtectionsRule} from "./rule/environmentBranchProtectionsRule";
-import {EnvironmentSecretsRule} from "./rule/environmentSecretsRule";
+import GithubWrapper from './githubWrapper';
+import { Rule } from './rule';
+import { ActionPermissionsAccessRule } from './rule/actionPermissionsAccessRule';
+import { ActionPermissionsRule } from './rule/actionPermissionsRule';
+import { ActionSecrets } from './rule/actionSecrets';
+import { EnvironmentBranchProtectionsRule } from './rule/environmentBranchProtectionsRule';
+import { EnvironmentProtectionRulesRule } from './rule/environmentProtectionRulesRule';
+import { EnvironmentSecretsRule } from './rule/environmentSecretsRule';
+import { EnvironmentsDeletionRule } from './rule/environmentsDeletionRule';
+import { EnvironmentsRule } from './rule/environmentsRule';
+import { FeatureRule } from './rule/featureRule';
+import { FilesRule } from './rule/filesRule';
+import { MergeFilesRule } from './rule/mergeFilesRule';
+import { RulesetsDeletionRule } from './rule/rulesetsDeletionRule';
+import { RulesetsRule } from './rule/rulesetsRule';
+import { AllElement, Configuration } from './type/configuration';
+import { RepositoryMetadata } from './type/github';
 
 export class Main {
     private readonly github: GithubWrapper;
@@ -28,25 +28,25 @@ export class Main {
 
     constructor() {
         const token = getInput('github_token', {
-            required: false
+            required: false,
         }) as string;
         const appId = getInput('github_app_id', {
-            required: false
+            required: false,
         }) as string;
         const appPrivateKey = getInput('github_app_private_key', {
-            required: false
+            required: false,
         }) as string;
         const appInstallationId = getInput('github_app_installation_id', {
-            required: false
+            required: false,
         }) as string;
 
-        if (!token && (!appId && !appPrivateKey && !appInstallationId)) {
-            throw new Error("No GitHub token or app credentials provided");
+        if (!token && !appId && !appPrivateKey && !appInstallationId) {
+            throw new Error('No GitHub token or app credentials provided');
         }
 
         this.github = new GithubWrapper(token, appId, appPrivateKey, appInstallationId);
         this.rules = [
-            new FeatureRule(this.github),
+            new FeatureRule(this.github), // Keep format
             new EnvironmentsRule(this.github),
             new EnvironmentProtectionRulesRule(this.github),
             new EnvironmentBranchProtectionsRule(this.github),
@@ -70,11 +70,11 @@ export class Main {
 
         const configuration = await this.parseConfig(configPath as string);
         if (!configuration) {
-            throw new Error("Configuration not found");
+            throw new Error('Configuration not found');
         }
         const configurationSchema = await this.getConfigurationSchema();
         if (!this.isValidConfiguration(configuration, configurationSchema)) {
-            throw new Error("Invalid configuration file");
+            throw new Error('Invalid configuration file');
         }
         core.info(`Configuration read successfully, got ${configuration.elements.length} elements`);
 
@@ -97,13 +97,13 @@ export class Main {
 
     private async listRepositories(element: AllElement): Promise<RepositoryMetadata[]> {
         let data: RepositoryMetadata[] = await this.github.listRepositories(element.owner, element.org);
-        if (element.searchType === "property") {
+        if (element.searchType === 'property') {
             data = data.filter((r) => this.github.hasProperty(r.properties, element));
         }
         if (element.exclude) {
-            data = data.filter(repo => !(element.exclude?.includes(repo.fullName) ?? false));
+            data = data.filter((repo) => !(element.exclude?.includes(repo.fullName) ?? false));
         }
-        return data.filter(repo => !(repo.archived ?? true));
+        return data.filter((repo) => !(repo.archived ?? true));
     }
 
     private async applyElement(element: AllElement, repository: RepositoryMetadata) {
@@ -138,7 +138,7 @@ export class Main {
     }
 
     private async parseConfig(configPath: string): Promise<any> {
-        if (!await fs.pathExists(configPath)) {
+        if (!(await fs.pathExists(configPath))) {
             return null;
         }
         const configContent = await fs.promises.readFile(configPath, 'utf8');
@@ -169,8 +169,8 @@ export class Main {
             core.error("__dirname undefined, configuration won't be validated");
             return {};
         }
-        const schemaPath = path.join(__dirname, "type", "configuration-schema.json");
-        if (!await fs.pathExists(schemaPath)) {
+        const schemaPath = path.join(__dirname, 'type', 'configuration-schema.json');
+        if (!(await fs.pathExists(schemaPath))) {
             core.error("Failed to get configuration schema, configuration won't be validated");
             return {};
         }

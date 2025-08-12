@@ -1,9 +1,9 @@
-import {RepositoryMetadata} from "src/type/github";
-import {Rule} from "../rule";
-import {RepositoryConfigurationRequest} from "../type/github";
-import * as core from "@actions/core";
-import GithubWrapper from "../githubWrapper";
-import {AllElement} from "src/type/configuration";
+import * as core from '@actions/core';
+import { AllElement } from 'src/type/configuration';
+import { RepositoryMetadata } from 'src/type/github';
+import GithubWrapper from '../githubWrapper';
+import { Rule } from '../rule';
+import { RepositoryConfigurationRequest } from '../type/github';
 
 export class FeatureRule implements Rule<RepositoryConfigurationRequest> {
     private readonly github: GithubWrapper;
