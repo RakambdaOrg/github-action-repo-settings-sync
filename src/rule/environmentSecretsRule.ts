@@ -30,7 +30,7 @@ export class EnvironmentSecretsRule implements Rule<{ name: string; secrets?: Ac
             }
             core.info(`Handling environment '${environment.name}'`);
 
-            core.debug('Getting repository public key');
+            core.debug('Getting repository environment public key');
             const key = await this.github.getRepositoryEnvironmentPublicKey(repository.owner, repository.name, environment.name);
             const currentSecrets = await this.github.listRepositoryEnvironmentSecret(repository.owner, repository.name, environment.name);
 
