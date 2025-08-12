@@ -363,6 +363,14 @@ export default class GithubWrapper {
             repo: repo,
         });
     }
+    
+    public async getRepositoryEnvironmentPublicKey(owner: string, repo: string, environment: string): Promise<{ key_id: string; key: string; }> {
+        return (await this.octokit.rest.actions.getEnvironmentPublicKey({
+            owner: owner,
+            repo: repo,
+            environment_name: environment,
+        })).data;
+    }
 
     public async listRepositoryEnvironmentSecret(owner: string, repo: string, environment: string): Promise<{ name: string }[]> {
         return await this.octokit.paginate(this.octokit.rest.actions.listEnvironmentSecrets, {

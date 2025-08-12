@@ -18,7 +18,7 @@
     "clean": "del-cli --force ./dist",
     "lint": "eslint ./src",
     "start": "tsc --noEmit && npm run start:schema && tsx --env-file=.env ./src/index.ts",
-    "start:schema": "ts-json-schema-generator --path src/type/configuration.ts Configuration --type Configuration --out src/type/configuration-schema.json",
+    "start:schema": "ts-json-schema-generator --path src/type/configuration.ts --type Configuration --out src/type/configuration-schema.json",
     "build": "npm run clean && ncc build ./src/index.ts -o dist -m --no-cache && npm run build:schema",
     "build:debug": "npm run clean && ncc build ./src/index.ts --v8-cache --source-map --no-cache && npm run build:schema",
     "build:schema": "ts-json-schema-generator --minify --path src/type/configuration.ts --type Configuration --out dist/type/configuration-schema.json"

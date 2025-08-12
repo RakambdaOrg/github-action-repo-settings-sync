@@ -12,7 +12,7 @@ export class EnvironmentSecretsRule implements Rule<{ name: string; secrets?: Ac
     }
 
     public getName(): string {
-        return 'environment protection rules creation/update/disable';
+        return 'environment secrets creation/update/delete';
     }
 
     public extractData(element: AllElement): { name: string; secrets?: ActionSecret[]; }[] | undefined {
@@ -31,7 +31,7 @@ export class EnvironmentSecretsRule implements Rule<{ name: string; secrets?: Ac
             core.info(`Handling environment '${environment.name}'`);
 
             core.debug("Getting repository public key");
-            const key = await this.github.getRepositoryPublicKey(repository.owner, repository.name);
+            const key = await this.github.getRepositoryEnvironmentPublicKey(repository.owner, repository.name, environment.name);
             const currentSecrets = await this.github.listRepositoryEnvironmentSecret(repository.owner, repository.name, environment.name);
 
             for (const secret of environment.secrets) {
