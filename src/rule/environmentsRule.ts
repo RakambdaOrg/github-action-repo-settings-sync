@@ -4,8 +4,15 @@ import GithubWrapper from '../githubWrapper';
 import { EnvironmentsBase } from './environmentsBase';
 
 export class EnvironmentsRule extends EnvironmentsBase {
+    private readonly disallowedFreeProperties: (keyof EnvironmentRequest)[];
+
     constructor(github: GithubWrapper) {
         super(github);
+        this.disallowedFreeProperties = [
+            'wait_timer', // Keep format
+            'prevent_self_review',
+            'reviewers',
+        ];
     }
 
     public getName(): string {
@@ -17,10 +24,18 @@ export class EnvironmentsRule extends EnvironmentsBase {
 
         let actualDefinition = environment.definition;
         if (repository.private && repository.plan === 'free') {
-            actualDefinition.wait_timer = undefined;
-            actualDefinition.prevent_self_review = undefined;
-            actualDefinition.reviewers = undefined;
+            let degraded = false;
+            for (const property of this.disallowedFreeProperties) {
+                if (property in actualDefinition && actualDefinition[property] !== undefined) {
+                    actualDefinition[property] = undefined;
+                    degraded = true;
+                }
+            }
+            if (degraded) {
+                core.warning(`Degraded mode on repository ${repository.fullName} : Cannot set wait timer, prevent self review or reviewers on free plan`);
+            }
         }
+
         const result = await this.github.createOrEditRepositoryEnvironment(repository.owner, repository.name, environment.name, environment.definition);
         core.debug(`Ruleset update response is ${JSON.stringify(result)}`);
     }
