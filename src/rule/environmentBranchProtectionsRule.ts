@@ -1,39 +1,27 @@
 import * as core from '@actions/core';
-import { AllElement, ProtectionRule } from 'src/type/configuration';
-import { EnvironmentRequest, RepositoryMetadata } from 'src/type/github';
+import { ProtectionRule } from 'src/type/configuration';
+import { RepositoryMetadata } from 'src/type/github';
 import GithubWrapper from '../githubWrapper';
-import { Rule } from '../rule';
+import { EnvironmentsBase } from './environmentsBase';
 
-export class EnvironmentBranchProtectionsRule implements Rule<{ name: string; definition: EnvironmentRequest }[]> {
-    private readonly github: GithubWrapper;
-
+export class EnvironmentBranchProtectionsRule extends EnvironmentsBase {
     constructor(github: GithubWrapper) {
-        this.github = github;
+        super(github);
     }
 
     public getName(): string {
         return 'environment branch protection creation/update/deletion';
     }
 
-    public extractData(element: AllElement): { name: string; definition: EnvironmentRequest }[] | undefined {
-        return element.environments;
-    }
-
-    public async canApply(_: RepositoryMetadata): Promise<string | undefined> {
-        return undefined;
-    }
-
-    public async apply(repository: RepositoryMetadata, data: { name: string; protectionRules?: ProtectionRule[] }[]): Promise<void> {
-        for (const environment of data) {
-            if (!environment.protectionRules) {
-                continue;
-            }
-            core.info(`Handling environment '${environment.name}'`);
-            const currentRules = await this.github.listRepositoryEnvironmentProtectionRules(repository.owner, repository.name, environment.name);
-
-            await this.handleCreations(repository, environment.name, environment.protectionRules, currentRules);
-            await this.handleDeletions(repository, environment.name, environment.protectionRules, currentRules);
+    protected async applyEnvironment(repository: RepositoryMetadata, environment: { name: string; protectionRules?: ProtectionRule[] }): Promise<void> {
+        if (!environment.protectionRules) {
+            return;
         }
+        core.info(`Handling environment '${environment.name}'`);
+        const currentRules = await this.github.listRepositoryEnvironmentProtectionRules(repository.owner, repository.name, environment.name);
+
+        await this.handleCreations(repository, environment.name, environment.protectionRules, currentRules);
+        await this.handleDeletions(repository, environment.name, environment.protectionRules, currentRules);
     }
 
     private async handleCreations(repository: RepositoryMetadata, environmentName: string, protectionRules: ProtectionRule[], currentRules: { enabled: boolean; app: { slug: string } }[]): Promise<void> {

@@ -41,6 +41,7 @@ export type Environment = {
     protectionRules?: ProtectionRule[];
     branchPolicies?: BranchPolicyRequest[];
     secrets?: ActionSecret[];
+    conditions?: CustomProperty[];
 };
 
 export type ActionSecret = {
