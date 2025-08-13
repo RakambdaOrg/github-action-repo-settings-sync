@@ -33,5 +33,5 @@ export abstract class EnvironmentsBase implements Rule<Environment[]> {
         }
     }
 
-    protected abstract applyEnvironment(repository: RepositoryMetadata, environment: Environment): Promise<void>;
+    protected abstract applyEnvironment(_repository: RepositoryMetadata, _environment: Environment): Promise<void>;
 }

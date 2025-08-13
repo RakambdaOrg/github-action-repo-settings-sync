@@ -22,12 +22,12 @@ export class EnvironmentsRule extends EnvironmentsBase {
     protected async applyEnvironment(repository: RepositoryMetadata, environment: { name: string; definition: EnvironmentRequest }): Promise<void> {
         core.debug(`Environment '${environment.name}' will be created/edited`);
 
-        let actualDefinition = environment.definition;
+        const definition = environment.definition;
         if (repository.private && repository.plan === 'free') {
             let degraded = false;
             for (const property of this.disallowedFreeProperties) {
-                if (property in actualDefinition && actualDefinition[property] !== undefined) {
-                    actualDefinition[property] = undefined;
+                if (property in definition && definition[property] !== undefined) {
+                    definition[property] = undefined;
                     degraded = true;
                 }
             }
