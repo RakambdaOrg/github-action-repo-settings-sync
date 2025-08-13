@@ -14,6 +14,13 @@ export class EnvironmentsRule extends EnvironmentsBase {
 
     protected async applyEnvironment(repository: RepositoryMetadata, environment: { name: string; definition: EnvironmentRequest }): Promise<void> {
         core.debug(`Environment '${environment.name}' will be created/edited`);
+
+        let actualDefinition = environment.definition;
+        if (repository.private && repository.plan === 'free') {
+            actualDefinition.wait_timer = undefined;
+            actualDefinition.prevent_self_review = undefined;
+            actualDefinition.reviewers = undefined;
+        }
         const result = await this.github.createOrEditRepositoryEnvironment(repository.owner, repository.name, environment.name, environment.definition);
         core.debug(`Ruleset update response is ${JSON.stringify(result)}`);
     }
