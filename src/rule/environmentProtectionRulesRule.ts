@@ -21,7 +21,6 @@ export class EnvironmentProtectionRulesRule extends EnvironmentsBase {
             core.info(`Skipped applying rules, no branch policies defined in environment '${environment.name}'`);
             return;
         }
-        core.info(`Handling environment '${environment.name}'`);
         const currentPolicies = (await this.github.listRepositoryEnvironmentBranchPolicies(repository.owner, repository.name, environment.name)).filter((r) => r.name !== undefined && r.id !== undefined).map((r) => r as { id: number; name: string });
 
         await this.handleCreations(repository, environment.name, environment.branchPolicies, currentPolicies);

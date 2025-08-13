@@ -17,7 +17,6 @@ export class EnvironmentBranchProtectionsRule extends EnvironmentsBase {
         if (!environment.protectionRules) {
             return;
         }
-        core.info(`Handling environment '${environment.name}'`);
         const currentRules = await this.github.listRepositoryEnvironmentProtectionRules(repository.owner, repository.name, environment.name);
 
         await this.handleCreations(repository, environment.name, environment.protectionRules, currentRules);
