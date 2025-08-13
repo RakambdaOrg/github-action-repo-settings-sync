@@ -21,6 +21,9 @@ export class RulesetsRule implements Rule<RepositoryRulesetRequest[]> {
     }
 
     public async canApply(repository: RepositoryMetadata): Promise<string | undefined> {
+        if (repository.archived ?? true) {
+            return 'Repository is archived';
+        }
         return repository.private && repository.plan === 'free' ? 'Your plan does not allow it' : undefined;
     }
 

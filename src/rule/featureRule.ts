@@ -20,8 +20,8 @@ export class FeatureRule implements Rule<RepositoryConfigurationRequest> {
         return element.features;
     }
 
-    public async canApply(_: RepositoryMetadata): Promise<string | undefined> {
-        return undefined;
+    public async canApply(repository: RepositoryMetadata): Promise<string | undefined> {
+        return (repository.archived ?? true) ? 'Repository is archived' : undefined;
     }
 
     public async apply(repository: RepositoryMetadata, data: RepositoryConfigurationRequest): Promise<void> {

@@ -18,6 +18,9 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
     public abstract extractData(_: AllElement): FilesOperation<T> | undefined;
 
     public async canApply(repository: RepositoryMetadata): Promise<string | undefined> {
+        if (repository.archived ?? true) {
+            return 'Repository is archived';
+        }
         return repository.defaultBranch ? undefined : 'Default branch unknown';
     }
 

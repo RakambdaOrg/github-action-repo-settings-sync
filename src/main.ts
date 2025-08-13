@@ -103,7 +103,7 @@ export class Main {
         if (element.exclude) {
             data = data.filter((repo) => !(element.exclude?.includes(repo.fullName) ?? false));
         }
-        return data.filter((repo) => !(repo.archived ?? true));
+        return data;
     }
 
     private async applyElement(element: AllElement, repository: RepositoryMetadata) {
