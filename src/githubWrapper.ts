@@ -6,6 +6,7 @@ import { RestEndpointMethodTypes, restEndpointMethods } from '@octokit/plugin-re
 import type { RestEndpointMethods } from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/method-types';
 import { throttling } from '@octokit/plugin-throttling';
 import _sodium from 'libsodium-wrappers';
+import { Cache } from './cache';
 import { CustomProperty } from './type/configuration';
 import { BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest } from './type/github';
 
@@ -30,8 +31,21 @@ type FileContent = {
     content?: string;
 };
 
+type SecretsKey = {
+    key_id: string;
+    key: string;
+};
+
+type RepositoryBranch = {
+    name: string;
+    commit: {
+        sha: string;
+    };
+};
+
 export default class GithubWrapper {
     private readonly octokit: Octokit & { paginate: PaginateInterface } & { rest: RestEndpointMethods };
+    private readonly cache: Cache;
 
     constructor(token?: string, appId?: string, appPrivateKey?: string, appInstallationId?: string) {
         // noinspection JSUnusedGlobalSymbols
@@ -67,9 +81,17 @@ export default class GithubWrapper {
 
         const MyOctokit = Octokit.plugin(paginateRest, throttling, restEndpointMethods);
         this.octokit = new MyOctokit(octokitOptions);
+
+        this.cache = new Cache();
     }
 
     public async listRepositories(owner: string, org: boolean): Promise<RepositoryMetadata[]> {
+        const cacheKey = `repositories_${owner}_${org}`;
+        const cached = this.cache.get(cacheKey) as RepositoryMetadata[] | undefined;
+        if (cached) {
+            return cached;
+        }
+
         const repositoriesMetadata: RepositoryMetadata[] = [];
 
         let plan: string;
@@ -100,6 +122,8 @@ export default class GithubWrapper {
                 html_url: repository.html_url,
             });
         }
+
+        this.cache.set(cacheKey, repositoriesMetadata);
         return repositoriesMetadata;
     }
 
@@ -234,21 +258,38 @@ export default class GithubWrapper {
         });
     }
 
-    public async getRepositoryPublicKey(owner: string, repo: string): Promise<{ key_id: string; key: string }> {
-        return (
+    public async getRepositoryPublicKey(owner: string, repo: string): Promise<SecretsKey> {
+        const cacheKey = `repository_public_key_${owner}_${repo}`;
+        const cached = this.cache.get(cacheKey) as SecretsKey | undefined;
+        if (cached) {
+            return cached;
+        }
+
+        const key = (
             await this.octokit.rest.actions.getRepoPublicKey({
                 owner: owner,
                 repo: repo,
             })
         ).data;
+
+        this.cache.set(cacheKey, key);
+        return key;
     }
 
-    public async listRepositoryBranches(owner: string, repo: string): Promise<{ name: string; commit: { sha: string } }[]> {
-        return await this.octokit.paginate(this.octokit.rest.repos.listBranches, {
+    public async listRepositoryBranches(owner: string, repo: string): Promise<RepositoryBranch[]> {
+        const cacheKey = `repository_branches_${owner}_${repo}`;
+        const cached = this.cache.get(cacheKey) as RepositoryBranch[] | undefined;
+        if (cached) {
+            return cached;
+        }
+
+        const branches = await this.octokit.paginate(this.octokit.rest.repos.listBranches, {
             owner: owner,
             repo: repo,
             per_page: 100,
         });
+        this.cache.set(cacheKey, branches);
+        return branches;
     }
 
     public async getFileMeta(owner: string, repo: string, path: string, ref?: string): Promise<FileContent> {
@@ -398,14 +439,23 @@ export default class GithubWrapper {
         });
     }
 
-    public async getRepositoryEnvironmentPublicKey(owner: string, repo: string, environment: string): Promise<{ key_id: string; key: string }> {
-        return (
+    public async getRepositoryEnvironmentPublicKey(owner: string, repo: string, environment: string): Promise<SecretsKey> {
+        const cacheKey = `repository_environment_public_key_${owner}_${repo}_${environment}`;
+        const cached = this.cache.get(cacheKey) as SecretsKey | undefined;
+        if (cached) {
+            return cached;
+        }
+
+        const key = (
             await this.octokit.rest.actions.getEnvironmentPublicKey({
                 owner: owner,
                 repo: repo,
                 environment_name: environment,
             })
         ).data;
+
+        this.cache.set(cacheKey, key);
+        return key;
     }
 
     public async listRepositoryEnvironmentSecret(owner: string, repo: string, environment: string): Promise<{ name: string }[]> {
