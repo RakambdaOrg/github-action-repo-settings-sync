@@ -42,8 +42,8 @@ export class EnvironmentProtectionRulesRule extends EnvironmentsBase {
 
     private async handleDeletions(repository: RepositoryMetadata, environmentName: string, branchPolicies: BranchPolicyRequest[], currentPolicies: { id: number; name: string }[]): Promise<void> {
         for (const policy of currentPolicies) {
-            const policyDeleted = branchPolicies.find((r) => r.name === policy.name);
-            if (policyDeleted) {
+            const policyRequested = branchPolicies.find((r) => r.name === policy.name);
+            if (!policyRequested) {
                 core.debug(`Branch policy '${policy.name}' will be disabled`);
                 const result = await this.github.deleteRepositoryEnvironmentBranchPolicy(repository.owner, repository.name, environmentName, policy.id);
                 core.debug(`Branch policy disable response is ${JSON.stringify(result)}`);

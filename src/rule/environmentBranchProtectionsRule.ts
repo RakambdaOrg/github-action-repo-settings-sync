@@ -41,8 +41,8 @@ export class EnvironmentBranchProtectionsRule extends EnvironmentsBase {
             if (!rule.enabled) {
                 continue;
             }
-            const ruleDeleted = protectionRules.find((r) => r.slug === rule.app.slug);
-            if (ruleDeleted) {
+            const ruleRequested = protectionRules.find((r) => r.slug === rule.app.slug);
+            if (!ruleRequested) {
                 core.debug(`Protection rule '${rule.app.slug}' will be disabled`);
                 const result = await this.github.deleteRepositoryEnvironmentProtectionRule(repository.owner, repository.name, environmentName, rule.id);
                 core.debug(`Protection rule disable response is ${JSON.stringify(result)}`);
