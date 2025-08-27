@@ -18,8 +18,8 @@ on:
       - main
 
 env:
-  NODE_VERSION: 21
-  PNPM_VERSION: 9
+  NODE_VERSION: 24
+  PNPM_VERSION: 10
 
 permissions:
   contents: write
