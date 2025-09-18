@@ -79,8 +79,8 @@ importers:
         specifier: ^4.17.20
         version: 4.17.20
       '@types/node':
-        specifier: ^24.5.1
-        version: 24.5.1
+        specifier: ^24.5.2
+        version: 24.5.2
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.43.0
         version: 8.43.0(@typescript-eslint/parser@8.43.0(eslint@9.35.0)(typescript@5.9.2))(eslint@9.35.0)(typescript@5.9.2)
@@ -593,8 +593,8 @@ packages:
   '@types/lodash@4.17.20':
     resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
-  '@types/node@24.5.1':
-    resolution: {integrity: sha512-/SQdmUP2xa+1rdx7VwB9yPq8PaKej8TD5cQ+XfKDPWWC+VDJU4rvVVagXqKUzhKjtFoNA8rXDJAkCxQPAe00+Q==}
+  '@types/node@24.5.2':
+    resolution: {integrity: sha512-FYxk1I7wPv3K2XBaoyH2cTnocQEu8AOZ60hPbsyukMPLv5/5qr7V1i8PLHdl6Zf87I+xZXFvPCXYjiTFq+YSDQ==}
 
   '@typescript-eslint/eslint-plugin@8.43.0':
     resolution: {integrity: sha512-8tg+gt7ENL7KewsKMKDHXR1vm8tt9eMxjJBYINf6swonlWgkYn5NwyIgXpbbDxTNU5DgpDFfj95prcTq2clIQQ==}
@@ -1840,7 +1840,7 @@ snapshots:
   '@types/fs-extra@11.0.4':
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/js-yaml@4.0.9': {}
 
@@ -1848,13 +1848,13 @@ snapshots:
 
   '@types/jsonfile@6.1.4':
     dependencies:
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/libsodium-wrappers@0.7.14': {}
 
   '@types/lodash@4.17.20': {}
 
-  '@types/node@24.5.1':
+  '@types/node@24.5.2':
     dependencies:
       undici-types: 7.12.0
 
