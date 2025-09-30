@@ -69,7 +69,7 @@ export type AnyRuleRule = CodeScanningRuleRule | MergeQueueRuleRule | SimpleRule
 export type RuleActor = {
     actor_id?: number | null | undefined;
     actor_type: 'Integration' | 'OrganizationAdmin' | 'RepositoryRole' | 'Team' | 'DeployKey';
-    bypass_mode: 'always' | 'pull_request';
+    bypass_mode: 'always' | 'pull_request' | 'exempt';
 };
 
 export type RuleConditions = {
