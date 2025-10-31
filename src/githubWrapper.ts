@@ -160,7 +160,7 @@ export default class GithubWrapper {
     }
 
     private async listRepositoryProperties(owner: string, repo: string): Promise<{ property_name: string; value: string | string[] | null }[]> {
-        return await this.octokit.paginate(this.octokit.rest.repos.getCustomPropertiesValues, {
+        return await this.octokit.paginate(this.octokit.rest.repos.customPropertiesForReposGetRepositoryValues, {
             owner: owner,
             repo: repo,
             per_page: 100,
