@@ -51,7 +51,7 @@
     "@octokit/core": "^7.0.6",
     "@octokit/types": "^16.0.0",
     "@stylistic/eslint-plugin": "^5.5.0",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.0",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",
     "@types/libsodium-wrappers": "^0.7.14",
