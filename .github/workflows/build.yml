@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v5.0.1
       - name: Setup PNPM
         uses: pnpm/action-setup@v4.2.0
         with:
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v5.0.1
       - name: Setup PNPM
         uses: pnpm/action-setup@v4.2.0
         with:
