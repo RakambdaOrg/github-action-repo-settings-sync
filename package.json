@@ -31,7 +31,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^2.0.1",
+    "@actions/core": "^2.0.2",
     "@actions/github": "^6.0.1",
     "@octokit/auth-app": "^8.1.2",
     "@octokit/plugin-paginate-rest": "^14.0.0",
