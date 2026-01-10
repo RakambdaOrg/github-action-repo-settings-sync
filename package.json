@@ -42,7 +42,7 @@
     "fs-extra": "^11.3.3",
     "libsodium-wrappers": "^0.8.0",
     "lodash": "^4.17.21",
-    "node-readfiles": "0.3.1",
+    "node-readfiles": "0.4.0",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
