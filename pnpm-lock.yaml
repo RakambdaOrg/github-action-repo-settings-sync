@@ -42,8 +42,8 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       node-readfiles:
-        specifier: 0.3.1
-        version: 0.3.1
+        specifier: 0.4.0
+        version: 0.4.0
       yaml:
         specifier: ^2.8.2
         version: 2.8.2
@@ -1118,8 +1118,8 @@ packages:
   ncc@0.3.6:
     resolution: {integrity: sha512-OXudTB2Ebt/FnOuDoPQbaa17+tdVqSOWA+gLfPxccWwsNED1uA2zEhpoB1hwdFC9yYbio/mdV5cvOtQI3Zrx1w==}
 
-  node-readfiles@0.3.1:
-    resolution: {integrity: sha512-2Gu+SQWWwXbcJm7aImNK4SvYGRC1fZMd2YAiA2EN72OWaV6zRzrV5amZ3dXWXiNG5vwzXZyQTIpNdLNuVUpx7w==}
+  node-readfiles@0.4.0:
+    resolution: {integrity: sha512-PURoaOXkXie5o6EbytZR1NqitQk0eHkpzrjhjmAlBoOVyrok56nzZNeS4LDRv2CtwbJ5wFOKBksA9TYh3zooNQ==}
 
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
@@ -2427,7 +2427,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  node-readfiles@0.3.1: {}
+  node-readfiles@0.4.0: {}
 
   normalize-path@3.0.0: {}
 
