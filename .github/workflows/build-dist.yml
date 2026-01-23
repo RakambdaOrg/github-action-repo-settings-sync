@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
       - name: Setup PNPM
         uses: pnpm/action-setup@v4.2.0
         with:
