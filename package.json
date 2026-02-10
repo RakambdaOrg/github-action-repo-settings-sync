@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@octokit/core": "^7.0.6",
     "@octokit/types": "^16.0.0",
     "@stylistic/eslint-plugin": "^5.8.0",
@@ -61,7 +61,7 @@
     "@typescript-eslint/parser": "^8.54.0",
     "@vercel/ncc": "^0.38.4",
     "del-cli": "^7.0.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "globals": "^17.3.0",
     "ncc": "^0.3.6",
     "prettier": "^3.8.1",
