@@ -1,5 +1,5 @@
-import { AllElement } from './type/configuration';
-import { RepositoryMetadata } from './type/github';
+import { AllElement } from './type/configuration.js';
+import { RepositoryMetadata } from './type/github.js';
 
 export interface Rule<T> {
     getName(): string;

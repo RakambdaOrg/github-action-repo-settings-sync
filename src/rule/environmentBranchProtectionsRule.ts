@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
-import { ProtectionRule } from 'src/type/configuration';
-import { RepositoryMetadata } from 'src/type/github';
-import GithubWrapper from '../githubWrapper';
-import { EnvironmentsBase } from './environmentsBase';
+import { ProtectionRule } from 'src/type/configuration.js';
+import { RepositoryMetadata } from 'src/type/github.js';
+import GithubWrapper from '../githubWrapper.js';
+import { EnvironmentsBase } from './environmentsBase.js';
 
 export class EnvironmentBranchProtectionsRule extends EnvironmentsBase {
     constructor(github: GithubWrapper) {

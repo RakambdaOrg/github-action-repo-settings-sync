@@ -2,13 +2,12 @@ import * as core from '@actions/core';
 import { createAppAuth } from '@octokit/auth-app';
 import { Octokit, OctokitOptions } from '@octokit/core';
 import { PaginateInterface, paginateRest } from '@octokit/plugin-paginate-rest';
-import { RestEndpointMethodTypes, restEndpointMethods } from '@octokit/plugin-rest-endpoint-methods';
-import type { RestEndpointMethods } from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/method-types';
+import { Api, RestEndpointMethodTypes, restEndpointMethods } from '@octokit/plugin-rest-endpoint-methods';
 import { throttling } from '@octokit/plugin-throttling';
 import _sodium from 'libsodium-wrappers';
-import { Cache } from './cache';
-import { CustomProperty } from './type/configuration';
-import { BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest } from './type/github';
+import { Cache } from './cache.js';
+import { CustomProperty } from './type/configuration.js';
+import { BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest } from './type/github.js';
 
 type RepositoryResponse = {
     id: number;
@@ -44,7 +43,7 @@ type RepositoryBranch = {
 };
 
 export default class GithubWrapper {
-    private readonly octokit: Octokit & { paginate: PaginateInterface } & { rest: RestEndpointMethods };
+    private readonly octokit: Octokit & { paginate: PaginateInterface } & Api;
     private readonly cache: Cache;
 
     constructor(token?: string, appId?: string, appPrivateKey?: string, appInstallationId?: string) {

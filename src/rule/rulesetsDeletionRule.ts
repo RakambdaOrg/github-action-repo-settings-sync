@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
-import { AllElement } from 'src/type/configuration';
-import { RepositoryMetadata } from 'src/type/github';
-import GithubWrapper from '../githubWrapper';
-import { Rule } from '../rule';
+import { AllElement } from 'src/type/configuration.js';
+import { RepositoryMetadata } from 'src/type/github.js';
+import GithubWrapper from '../githubWrapper.js';
+import { Rule } from '../rule.js';
 
 export class RulesetsDeletionRule implements Rule<string[]> {
     private readonly github: GithubWrapper;

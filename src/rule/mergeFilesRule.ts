@@ -1,9 +1,9 @@
 import lodash from 'lodash';
-import { RepositoryMetadata } from 'src/type/github';
+import { RepositoryMetadata } from 'src/type/github.js';
 import yaml from 'yaml';
-import GithubWrapper from '../githubWrapper';
-import { AllElement, FilesOperation, MergeFile } from '../type/configuration';
-import { AbstractFilesRule } from './abstractFilesRule';
+import GithubWrapper from '../githubWrapper.js';
+import { AllElement, FilesOperation, MergeFile } from '../type/configuration.js';
+import { AbstractFilesRule } from './abstractFilesRule.js';
 
 export class MergeFilesRule extends AbstractFilesRule<MergeFile> {
     constructor(github: GithubWrapper) {

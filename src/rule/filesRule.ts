@@ -1,7 +1,7 @@
-import { RepositoryMetadata } from 'src/type/github';
-import GithubWrapper from '../githubWrapper';
-import { AllElement, File, FilesOperation } from '../type/configuration';
-import { AbstractFilesRule } from './abstractFilesRule';
+import { RepositoryMetadata } from 'src/type/github.js';
+import GithubWrapper from '../githubWrapper.js';
+import { AllElement, File, FilesOperation } from '../type/configuration.js';
+import { AbstractFilesRule } from './abstractFilesRule.js';
 
 export class FilesRule extends AbstractFilesRule<File> {
     constructor(github: GithubWrapper) {
