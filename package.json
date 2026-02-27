@@ -46,7 +46,7 @@
     "yaml": "^2.8.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/eslintrc": "^3.3.4",
     "@eslint/js": "^10.0.1",
     "@octokit/core": "^7.0.6",
     "@octokit/types": "^16.0.0",
@@ -57,11 +57,11 @@
     "@types/libsodium-wrappers": "^0.8.2",
     "@types/lodash": "^4.17.24",
     "@types/node": "^25.3.2",
-    "@typescript-eslint/eslint-plugin": "^8.56.0",
-    "@typescript-eslint/parser": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
     "@vercel/ncc": "^0.38.4",
     "del-cli": "^7.0.0",
-    "eslint": "^10.0.1",
+    "eslint": "^10.0.2",
     "globals": "^17.3.0",
     "ncc": "^0.3.6",
     "prettier": "^3.8.1",
