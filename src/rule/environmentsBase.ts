@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
-import { AllElement, Environment } from 'src/type/configuration';
-import { RepositoryMetadata } from 'src/type/github';
-import GithubWrapper from '../githubWrapper';
-import { Rule } from '../rule';
+import { AllElement, Environment } from 'src/type/configuration.js';
+import { RepositoryMetadata } from 'src/type/github.js';
+import GithubWrapper from '../githubWrapper.js';
+import { Rule } from '../rule.js';
 
 export abstract class EnvironmentsBase implements Rule<Environment[]> {
     protected readonly github: GithubWrapper;

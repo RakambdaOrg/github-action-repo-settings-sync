@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { Main } from './main';
+import { Main } from './main.js';
 
 new Main().run().catch((err: any) => {
     core.setFailed(err.message);

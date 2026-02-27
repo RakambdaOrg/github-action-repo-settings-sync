@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
-import { EnvironmentRequest, RepositoryMetadata } from 'src/type/github';
-import GithubWrapper from '../githubWrapper';
-import { EnvironmentsBase } from './environmentsBase';
+import { EnvironmentRequest, RepositoryMetadata } from 'src/type/github.js';
+import GithubWrapper from '../githubWrapper.js';
+import { EnvironmentsBase } from './environmentsBase.js';
 
 export class EnvironmentsRule extends EnvironmentsBase {
     private readonly disallowedFreeProperties: (keyof EnvironmentRequest)[];
