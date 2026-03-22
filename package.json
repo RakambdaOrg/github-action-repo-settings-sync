@@ -43,7 +43,7 @@
     "libsodium-wrappers": "^0.8.2",
     "lodash": "^4.17.23",
     "node-readfiles": "0.4.0",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
