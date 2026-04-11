@@ -94,7 +94,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
             return await readFile(path, 'utf-8');
         } catch (error) {
             if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-                throw new Error(`File ${path} not found`);
+                throw new Error(`File ${path} not found`, { cause: error });
             }
             throw error;
         }
