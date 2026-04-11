@@ -49,6 +49,11 @@
   "license": "MIT",
   "main": "dist/index.js",
   "name": "github-action-repo-settings-sync",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
   "private": true,
   "repository": {
     "type": "git",
