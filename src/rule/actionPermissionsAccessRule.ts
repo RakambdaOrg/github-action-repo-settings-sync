@@ -1,5 +1,5 @@
-import { AllElement } from 'src/type/configuration.js';
-import { RepositoryMetadata } from 'src/type/github.js';
+import { AllElement } from '@/type/configuration.js';
+import { RepositoryMetadata } from '@/type/github.js';
 import GithubWrapper from '../githubWrapper.js';
 import { Rule } from '../rule.js';
 import { RepositoryActionsAccessPermissionsRequest } from '../type/github.js';

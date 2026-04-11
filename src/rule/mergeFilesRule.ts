@@ -1,5 +1,5 @@
-import lodash from 'lodash';
-import { RepositoryMetadata } from 'src/type/github.js';
+import { RepositoryMetadata } from '@/type/github.js';
+import { mergeWith } from 'es-toolkit';
 import yaml from 'yaml';
 import GithubWrapper from '../githubWrapper.js';
 import { AllElement, FilesOperation, MergeFile } from '../type/configuration.js';
@@ -43,12 +43,18 @@ export class MergeFilesRule extends AbstractFilesRule<MergeFile> {
             return this.transformObjectToContent(objects[0], data.type);
         }
 
-        const merged = lodash.mergeWith(objects[0], ...objects.slice(1), (objValue: any, srcValue: any) => {
-            if (objValue && objValue.constructor === Array) {
-                return objValue.concat(srcValue);
+        const customizer = (objValue: unknown, srcValue: unknown) => {
+            if (Array.isArray(objValue)) {
+                return (objValue as unknown[]).concat(srcValue);
             }
             return undefined;
-        });
+        };
+
+        let merged = objects[0];
+        for (const obj of objects.slice(1)) {
+            merged = mergeWith(merged, obj, customizer);
+        }
+
         return this.transformObjectToContent(merged, data.type);
     }
 
