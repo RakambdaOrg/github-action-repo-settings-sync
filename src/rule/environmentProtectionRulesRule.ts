@@ -1,5 +1,5 @@
+import { BranchPolicyRequest, RepositoryMetadata } from '@/type/github.js';
 import * as core from '@actions/core';
-import { BranchPolicyRequest, RepositoryMetadata } from 'src/type/github.js';
 import GithubWrapper from '../githubWrapper.js';
 import { EnvironmentsBase } from './environmentsBase.js';
 

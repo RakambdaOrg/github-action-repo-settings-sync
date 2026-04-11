@@ -1,4 +1,4 @@
-import { RepositoryMetadata } from 'src/type/github.js';
+import { RepositoryMetadata } from '@/type/github.js';
 import GithubWrapper from '../githubWrapper.js';
 import { AllElement, File, FilesOperation } from '../type/configuration.js';
 import { AbstractFilesRule } from './abstractFilesRule.js';

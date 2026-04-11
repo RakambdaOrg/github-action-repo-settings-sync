@@ -1,7 +1,7 @@
+import { readFile } from 'node:fs/promises';
+import { AllElement } from '@/type/configuration.js';
+import { RepositoryMetadata } from '@/type/github.js';
 import * as core from '@actions/core';
-import fs from 'fs-extra';
-import { AllElement } from 'src/type/configuration.js';
-import { RepositoryMetadata } from 'src/type/github.js';
 import GithubWrapper from '../githubWrapper.js';
 import { Rule } from '../rule.js';
 import { FilesOperation } from '../type/configuration.js';
@@ -89,10 +89,14 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
         return resultObj;
     }
 
-    protected async readFile(path: string): Promise<string | undefined> {
-        if (!(await fs.pathExists(path))) {
-            throw new Error(`File ${path} not found`);
+    protected async readFile(path: string): Promise<string> {
+        try {
+            return await readFile(path, 'utf-8');
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+                throw new Error(`File ${path} not found`, { cause: error });
+            }
+            throw error;
         }
-        return await fs.promises.readFile(path, 'utf8');
     }
 }

@@ -1,6 +1,6 @@
+import { ActionSecret } from '@/type/configuration.js';
+import { RepositoryMetadata } from '@/type/github.js';
 import * as core from '@actions/core';
-import { ActionSecret } from 'src/type/configuration.js';
-import { RepositoryMetadata } from 'src/type/github.js';
 import GithubWrapper from '../githubWrapper.js';
 import { EnvironmentsBase } from './environmentsBase.js';
 

@@ -1,8 +1,9 @@
+import { readFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import * as core from '@actions/core';
-import { getInput } from 'action-input-parser';
+import { getInput } from '@actions/core';
 import { Ajv } from 'ajv';
-import fs from 'fs-extra';
-import * as path from 'node:path';
 import yaml from 'yaml';
 import GithubWrapper from './githubWrapper.js';
 import { Rule } from './rule.js';
@@ -11,8 +12,8 @@ import { ActionPermissionsRule } from './rule/actionPermissionsRule.js';
 import { ActionSecrets } from './rule/actionSecrets.js';
 import { EnvironmentBranchProtectionsRule } from './rule/environmentBranchProtectionsRule.js';
 import { EnvironmentProtectionRulesRule } from './rule/environmentProtectionRulesRule.js';
-import { EnvironmentSecretsRule } from './rule/environmentSecretsRule.js';
 import { EnvironmentsDeletionRule } from './rule/environmentsDeletionRule.js';
+import { EnvironmentSecretsRule } from './rule/environmentSecretsRule.js';
 import { EnvironmentsRule } from './rule/environmentsRule.js';
 import { FeatureRule } from './rule/featureRule.js';
 import { FilesRule } from './rule/filesRule.js';
@@ -63,10 +64,7 @@ export class Main {
     }
 
     public async run(): Promise<void> {
-        const configPath = getInput('CONFIG_PATH', {
-            default: '.github/settings-sync.yml',
-            required: false,
-        });
+        const configPath = getInput('CONFIG_PATH', { required: false }) || '.github/settings-sync.yml';
 
         const configuration = await this.parseConfig(configPath as string);
         if (!configuration) {
@@ -136,14 +134,17 @@ export class Main {
             core.error(e);
         }
     }
-
     private async parseConfig(configPath: string): Promise<any> {
-        if (!(await fs.pathExists(configPath))) {
-            return null;
+        try {
+            const configContent = await readFile(configPath, 'utf-8');
+            const evaluatedConfigContent = this.replaceEnvVars(configContent);
+            return yaml.parse(evaluatedConfigContent);
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+                return null;
+            }
+            throw error;
         }
-        const configContent = await fs.promises.readFile(configPath, 'utf8');
-        const evaluatedConfigContent = this.replaceEnvVars(configContent);
-        return yaml.parse(evaluatedConfigContent);
     }
 
     private replaceEnvVars(content: string) {
@@ -165,17 +166,18 @@ export class Main {
     }
 
     private async getConfigurationSchema(): Promise<object> {
-        if (typeof __dirname === 'undefined') {
-            core.error("__dirname undefined, configuration won't be validated");
-            return {};
+        try {
+            const __dirname = dirname(fileURLToPath(import.meta.url));
+            const schemaPath = join(__dirname, 'type', 'configuration-schema.json');
+            const schemaContent = await readFile(schemaPath, 'utf-8');
+            return JSON.parse(schemaContent);
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+                core.error("Failed to get configuration schema, configuration won't be validated");
+                return {};
+            }
+            throw error;
         }
-        const schemaPath = path.join(__dirname, 'type', 'configuration-schema.json');
-        if (!(await fs.pathExists(schemaPath))) {
-            core.error("Failed to get configuration schema, configuration won't be validated");
-            return {};
-        }
-        const schemaContent = await fs.promises.readFile(schemaPath, 'utf8');
-        return JSON.parse(schemaContent);
     }
 
     private isValidConfiguration(data: any, schema: object): data is Configuration {

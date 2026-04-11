@@ -1,35 +1,8 @@
 {
-  "name": "github-action-repo-settings-sync",
-  "version": "2.0.0",
-  "description": "Github Action to setup repository settings",
-  "main": "dist/index.js",
-  "type": "module",
   "author": "Rakambda",
-  "private": true,
-  "homepage": "https://github.com/RakambdaOrg/github-action-repo-settings-sync",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RakambdaOrg/github-action-repo-settings-sync.git"
-  },
   "bugs": {
     "url": "https://github.com/RakambdaOrg/github-action-repo-settings-sync/issues"
   },
-  "scripts": {
-    "clean": "del-cli --force ./dist",
-    "lint": "eslint ./src",
-    "start": "tsc --noEmit && npm run start:schema && tsx --env-file=.env ./src/index.ts",
-    "start:schema": "ts-json-schema-generator --path src/type/configuration.ts --type Configuration --out src/type/configuration-schema.json",
-    "build": "npm run clean && ncc build ./src/index.ts -o dist -m --no-cache && npm run build:schema",
-    "build:debug": "npm run clean && ncc build ./src/index.ts --v8-cache --source-map --no-cache && npm run build:schema",
-    "build:schema": "ts-json-schema-generator --minify --path src/type/configuration.ts --type Configuration --out dist/type/configuration-schema.json"
-  },
-  "keywords": [
-    "sync",
-    "settings-sync",
-    "github-workflow",
-    "github-actions"
-  ],
-  "license": "MIT",
   "dependencies": {
     "@actions/core": "^3.0.0",
     "@actions/github": "^9.1.0",
@@ -37,25 +10,20 @@
     "@octokit/plugin-paginate-rest": "^14.0.0",
     "@octokit/plugin-rest-endpoint-methods": "^17.0.0",
     "@octokit/plugin-throttling": "^11.0.3",
-    "action-input-parser": "^1.2.38",
     "ajv": "^8.18.0",
-    "fs-extra": "^11.3.4",
+    "es-toolkit": "^1.45.1",
     "libsodium-wrappers": "^0.8.3",
-    "lodash": "^4.18.1",
-    "node-readfiles": "0.4.0",
     "yaml": "^2.8.3"
   },
+  "description": "Github Action to setup repository settings",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@octokit/core": "^7.0.6",
     "@octokit/types": "^16.0.0",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
-    "@types/fs-extra": "^11.0.4",
-    "@types/js-yaml": "^4.0.9",
     "@types/libsodium-wrappers": "^0.8.2",
-    "@types/lodash": "^4.17.24",
     "@types/node": "^25.6.0",
     "@typescript-eslint/eslint-plugin": "^8.58.1",
     "@typescript-eslint/parser": "^8.58.1",
@@ -63,10 +31,41 @@
     "del-cli": "^7.0.0",
     "eslint": "^10.2.0",
     "globals": "^17.4.0",
-    "ncc": "^0.3.6",
     "prettier": "^3.8.2",
     "ts-json-schema-generator": "^2.9.0",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
-  }
+    "typescript": "^6.0.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "homepage": "https://github.com/RakambdaOrg/github-action-repo-settings-sync",
+  "keywords": [
+    "sync",
+    "settings-sync",
+    "github-workflow",
+    "github-actions"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "name": "github-action-repo-settings-sync",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RakambdaOrg/github-action-repo-settings-sync.git"
+  },
+  "scripts": {
+    "build": "npm run clean && ncc build ./src/index.ts -o dist -m --no-cache && npm run build:schema",
+    "build:debug": "npm run clean && ncc build ./src/index.ts --v8-cache --source-map --no-cache && npm run build:schema",
+    "build:schema": "ts-json-schema-generator --minify --path src/type/configuration.ts --type Configuration --out dist/type/configuration-schema.json",
+    "clean": "del-cli --force ./dist",
+    "lint": "eslint ./src",
+    "start": "tsc --noEmit && npm run start:schema && tsx --env-file=.env ./src/index.ts",
+    "start:schema": "ts-json-schema-generator --path src/type/configuration.ts --type Configuration --out src/type/configuration-schema.json"
+  },
+  "tsx": {
+    "paths": true
+  },
+  "type": "module",
+  "version": "2.0.0"
 }
