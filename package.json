@@ -11,7 +11,7 @@
     "@octokit/plugin-rest-endpoint-methods": "^17.0.0",
     "@octokit/plugin-throttling": "^11.0.3",
     "ajv": "^8.20.0",
-    "es-toolkit": "^1.46.0",
+    "es-toolkit": "^1.46.1",
     "libsodium-wrappers": "^0.8.4",
     "yaml": "^2.8.3"
   },
