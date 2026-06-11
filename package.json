@@ -24,7 +24,7 @@
     "@octokit/types": "^16.0.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/libsodium-wrappers": "^0.8.2",
-    "@types/node": "^25.9.2",
+    "@types/node": "^25.9.3",
     "@typescript-eslint/eslint-plugin": "^8.60.1",
     "@typescript-eslint/parser": "^8.60.1",
     "@vercel/ncc": "^0.44.0",
