@@ -30,8 +30,8 @@ importers:
         specifier: ^8.20.0
         version: 8.20.0
       es-toolkit:
-        specifier: ^1.48.1
-        version: 1.48.1
+        specifier: ^1.49.0
+        version: 1.49.0
       libsodium-wrappers:
         specifier: ^0.8.4
         version: 0.8.4
@@ -666,8 +666,8 @@ packages:
     resolution: {integrity: sha512-gPqh0mKTPvaUZGAuHbrBUYKZWBNAeHG7TU3QH5EhVwPMyKvmfJaNXhcD2jTcXsJRRcffuho4vaYweu80dRrMGA==}
     engines: {node: '>=18'}
 
-  es-toolkit@1.48.1:
-    resolution: {integrity: sha512-wfnXlwd5I75eXRtdD2vuEs50xHHESECDsGD7yiQnfFVNoa5522NwXEbmgo98LfiukSQHs+mBM7/YG3qKJB9/mQ==}
+  es-toolkit@1.49.0:
+    resolution: {integrity: sha512-G5iZ6Pc/FNRY/soKZHC+TxGDD83rHUDXxzaWhGCX44vAv/tMs56WMusnm/KMNK+luUPsgA9U28cGr4RDlSzL2g==}
 
   esbuild@0.28.0:
     resolution: {integrity: sha512-sNR9MHpXSUV/XB4zmsFKN+QgVG82Cc7+/aaxJ8Adi8hyOac+EXptIp45QBPaVyX3N70664wRbTcLTOemCAnyqw==}
@@ -1698,7 +1698,7 @@ snapshots:
       presentable-error: 0.0.1
       slash: 5.1.0
 
-  es-toolkit@1.48.1: {}
+  es-toolkit@1.49.0: {}
 
   esbuild@0.28.0:
     optionalDependencies:
