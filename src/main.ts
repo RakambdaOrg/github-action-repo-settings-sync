@@ -22,6 +22,7 @@ import { RulesetsDeletionRule } from './rule/rulesetsDeletionRule.js';
 import { RulesetsRule } from './rule/rulesetsRule.js';
 import { AllElement, Configuration } from './type/configuration.js';
 import { RepositoryMetadata } from './type/github.js';
+import { CodeQuality } from '@/rule/codeQuality.js';
 
 export class Main {
     private readonly github: GithubWrapper;
@@ -60,6 +61,7 @@ export class Main {
             new ActionSecrets(this.github),
             new FilesRule(this.github),
             new MergeFilesRule(this.github),
+            new CodeQuality(this.github),
         ];
     }
 

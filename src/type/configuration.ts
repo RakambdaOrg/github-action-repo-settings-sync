@@ -1,4 +1,4 @@
-import { BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryRulesetRequest } from './github.js';
+import { BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryCodeQuality, RepositoryConfigurationRequest, RepositoryRulesetRequest } from './github.js';
 
 export type Configuration = {
     elements: AllElement[];
@@ -33,6 +33,7 @@ export type Element = {
         accessPermissions?: RepositoryActionsAccessPermissionsRequest;
         secrets?: ActionSecret[];
     };
+    codeQuality?: RepositoryCodeQuality;
 };
 
 export type Environment = {

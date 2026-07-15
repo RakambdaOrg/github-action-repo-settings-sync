@@ -204,3 +204,12 @@ export type RepositoryActionsPermissionsRequest = {
 export type RepositoryActionsAccessPermissionsRequest = {
     access_level: 'none' | 'user' | 'organization';
 };
+
+export type RepositoryCodeQuality = {
+    state?: 'configured' | 'not-configured';
+    runner_type?: 'standard' | 'labeled';
+    runner_label?: string;
+    languages?: CodeQualityLanguages[];
+};
+
+export type CodeQualityLanguages = 'csharp' | 'go' | 'java-kotlin' | 'javascript-typescript' | 'python' | 'ruby';
