@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import { createAppAuth } from '@octokit/auth-app';
 import { Octokit, OctokitOptions } from '@octokit/core';
 import { PaginateInterface, paginateRest } from '@octokit/plugin-paginate-rest';
-import { Api, RestEndpointMethodTypes, restEndpointMethods } from '@octokit/plugin-rest-endpoint-methods';
+import { Api, restEndpointMethods, RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 import { throttling } from '@octokit/plugin-throttling';
 import _sodium from 'libsodium-wrappers';
 import { Cache } from './cache.js';
@@ -10,7 +10,7 @@ import { CustomProperty } from './type/configuration.js';
 import { BranchPolicyRequest, EnvironmentProtectionRuleRequest, EnvironmentRequest, RepositoryActionsAccessPermissionsRequest, RepositoryActionsPermissionsRequest, RepositoryConfigurationRequest, RepositoryMetadata, RepositoryRulesetRequest } from './type/github.js';
 
 type RepositoryResponse = {
-    id: number;
+    id: number | bigint;
     name: string;
     full_name: string;
     archived?: boolean;
@@ -343,7 +343,7 @@ export default class GithubWrapper {
         ).data;
     }
 
-    public async listRepositoryEnvironments(owner: string, repo: string): Promise<{ id: number; name: string }[]> {
+    public async listRepositoryEnvironments(owner: string, repo: string): Promise<{ id: number | bigint; name: string }[]> {
         return (
             (
                 await this.octokit.rest.repos.getAllEnvironments({
@@ -363,7 +363,7 @@ export default class GithubWrapper {
         });
     }
 
-    public async createOrEditRepositoryEnvironment(owner: string, repo: string, name: string, parameters: EnvironmentRequest): Promise<{ id: number; name: string }> {
+    public async createOrEditRepositoryEnvironment(owner: string, repo: string, name: string, parameters: EnvironmentRequest): Promise<{ id: number | bigint; name: string }> {
         return (
             await this.octokit.rest.repos.createOrUpdateEnvironment({
                 ...parameters,
