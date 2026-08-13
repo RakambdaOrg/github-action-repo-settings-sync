@@ -70,8 +70,8 @@ importers:
         specifier: ^8.66.0
         version: 8.66.0(eslint@10.8.1)(typescript@6.0.3)
       '@vercel/ncc':
-        specifier: ^0.44.1
-        version: 0.44.1
+        specifier: ^0.45.0
+        version: 0.45.0
       del-cli:
         specifier: ^7.0.0
         version: 7.0.0
@@ -608,8 +608,8 @@ packages:
     resolution: {integrity: sha512-dkKR8q+lKciskj1Y3vthHktl+3cMLWGyVUP23bRiPZ5O9BRT++4EqDDV+TVeIKBL1VXVEqrJlz8MYbcnvJcAlg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@vercel/ncc@0.44.1':
-    resolution: {integrity: sha512-cUjIE5P2YY1n+Kt9rFIazMMpGoPn1Fic04rOmTkElMkiDP5oszGfERMpo2shVkFKDL7rVppdM2pqJKC59shQWQ==}
+  '@vercel/ncc@0.45.0':
+    resolution: {integrity: sha512-8zPi1yO2mHpoKTD+e+Bf0ZT3e+sWHSOyGapm9s7b5R0gxJi3CiFTqmeQiMEyu6ejrz2s09M8JkEoUaTWjBJPQQ==}
     hasBin: true
 
   acorn-jsx@5.3.2:
@@ -1676,7 +1676,7 @@ snapshots:
       '@typescript-eslint/types': 8.66.0
       eslint-visitor-keys: 5.0.1
 
-  '@vercel/ncc@0.44.1': {}
+  '@vercel/ncc@0.45.0': {}
 
   acorn-jsx@5.3.2(acorn@8.18.0):
     dependencies:
