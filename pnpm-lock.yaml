@@ -61,8 +61,8 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2
       '@types/node':
-        specifier: ^26.2.0
-        version: 26.2.0
+        specifier: ^26.3.0
+        version: 26.3.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.67.0
         version: 8.67.0(@typescript-eslint/parser@8.67.0(eslint@10.9.0)(typescript@6.0.3))(eslint@10.9.0)(typescript@6.0.3)
@@ -542,8 +542,8 @@ packages:
     resolution: {integrity: sha512-+2IDfSULPUskSjIYfZl9suIUsIE5PXwoKZiE/j0MZWd+M9nEGvJDsk/ztMZKNhL1lBL+1CaypW0dQSjqPW2dMg==}
     deprecated: This is a stub types definition. libsodium-wrappers provides its own type definitions, so you do not need this installed.
 
-  '@types/node@26.2.0':
-    resolution: {integrity: sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg==}
+  '@types/node@26.3.0':
+    resolution: {integrity: sha512-L3fgrnchriRC2ExBflb8j4uZZURHZfQsmQeyVzhjcHW4kkwVyo8/0h1B2MVzMTrYUJYu6G7EWs14hW/L9putqw==}
 
   '@typescript-eslint/eslint-plugin@8.67.0':
     resolution: {integrity: sha512-Un7Heoyj65NREbKAyIrFxeM143NZpExWmy1Nep4DLeQOeLlTeumPjoNKnBrU5D5moWXbPJgRa5Uwcdu0faVNGQ==}
@@ -1579,7 +1579,7 @@ snapshots:
     dependencies:
       libsodium-wrappers: 0.8.4
 
-  '@types/node@26.2.0':
+  '@types/node@26.3.0':
     dependencies:
       undici-types: 8.3.0
 
