@@ -13,7 +13,7 @@
     "ajv": "^8.20.0",
     "es-toolkit": "^1.52.0",
     "libsodium-wrappers": "^0.8.4",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "description": "Github Action to setup repository settings",
   "devDependencies": {
