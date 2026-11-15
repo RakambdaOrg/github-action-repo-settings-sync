@@ -38,7 +38,8 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
 
         const branchExists = currentBranches.find((b) => b.name === branchName);
         if (!branchExists) {
-            core.error(`Branch ${branchName} does not exist`);
+            // Empty repositories report a default branch that has no commits yet
+            core.warning(`Branch ${branchName} does not exist, skipping files sync`);
             return;
         }
         for (const file of data.files) {

@@ -95,6 +95,7 @@ export class Main {
 
     private async listRepositories(element: AllElement): Promise<RepositoryMetadata[]> {
         let data: RepositoryMetadata[] = await this.github.listRepositories(element.owner, element.org);
+        data = data.filter((r) => !r.archived);
         if (element.searchType === 'property') {
             data = data.filter((r) => this.github.hasProperty(r.properties, element));
         }
