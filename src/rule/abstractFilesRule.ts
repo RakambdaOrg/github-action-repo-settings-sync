@@ -21,7 +21,12 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
         if (repository.archived ?? true) {
             return 'Repository is archived';
         }
-        return repository.defaultBranch ? undefined : 'Default branch unknown';
+        if (!repository.defaultBranch) {
+            return 'Default branch unknown';
+        }
+        // Empty repositories still report a default branch
+        const branches = await this.github.listRepositoryBranches(repository.owner, repository.name);
+        return branches.length > 0 ? undefined : 'Repository has no branches';
     }
 
     protected abstract getContent(_: T, __: RepositoryMetadata): Promise<string | undefined>;
