@@ -95,7 +95,6 @@ export class Main {
 
     private async listRepositories(element: AllElement): Promise<RepositoryMetadata[]> {
         let data: RepositoryMetadata[] = await this.github.listRepositories(element.owner, element.org);
-        data = data.filter((r) => !r.archived);
         if (element.searchType === 'property') {
             data = data.filter((r) => this.github.hasProperty(r.properties, element));
         }
@@ -124,7 +123,7 @@ export class Main {
 
             const canApply = await rule.canApply(repository);
             if (canApply !== undefined) {
-                core.warning(`Cannot apply ${type} on repository ${repository.fullName} : ${canApply}`);
+                core.info(`Cannot apply ${type} on repository ${repository.fullName} : ${canApply}`);
                 return;
             }
 

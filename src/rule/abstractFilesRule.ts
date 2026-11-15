@@ -21,7 +21,12 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
         if (repository.archived ?? true) {
             return 'Repository is archived';
         }
-        return repository.defaultBranch ? undefined : 'Default branch unknown';
+        if (!repository.defaultBranch) {
+            return 'Default branch unknown';
+        }
+        // Empty repositories still report a default branch
+        const branches = await this.github.listRepositoryBranches(repository.owner, repository.name);
+        return branches.length > 0 ? undefined : 'Repository has no branches';
     }
 
     protected abstract getContent(_: T, __: RepositoryMetadata): Promise<string | undefined>;
@@ -38,8 +43,7 @@ export abstract class AbstractFilesRule<T extends { destination: string }> imple
 
         const branchExists = currentBranches.find((b) => b.name === branchName);
         if (!branchExists) {
-            // Empty repositories report a default branch that has no commits yet
-            core.warning(`Branch ${branchName} does not exist, skipping files sync`);
+            core.error(`Branch ${branchName} does not exist`);
             return;
         }
         for (const file of data.files) {
